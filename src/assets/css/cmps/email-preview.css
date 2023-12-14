@@ -1,0 +1,37 @@
+.email-preview {
+    cursor: pointer;
+}
+
+.email-preview-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.email-preview-main {
+    display: flex;
+    gap:40px;
+    margin-right: 40px;
+    word-break: break-all;
+}
+
+.email-preview-from {
+    min-width: 200px;
+    /* justify-self: flex-start; */
+}
+
+.email-preview-subject {
+    /* justify-self: flex-end; */
+}
+
+.email-preview-read {
+    font-weight: 700;
+    background-color: white;
+}
+
+/*.email-preview .info {
+    padding: 10px;
+    flex-grow: 1;
+}*/
+
+
+

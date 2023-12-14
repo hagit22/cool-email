@@ -1,0 +1,16 @@
+.email-preview {
+    cursor: pointer;
+}
+
+.email-preview-grid-container {
+    display: grid;
+    grid-template-columns: 20% 70% 10%;
+}
+
+.email-preview-grid-date {
+    justify-self: end;
+}
+
+
+
+
