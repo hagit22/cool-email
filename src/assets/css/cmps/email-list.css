@@ -1,0 +1,16 @@
+.email-list {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    gap: 15px;
+    list-style-type: none;
+}
+
+.email-list .email-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #000000c9;
+    transition: transform 0.2s;
+}

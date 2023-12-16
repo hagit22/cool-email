@@ -1,0 +1,9 @@
+.about h2 {
+    text-decoration: underline;
+    margin-bottom: 10px;
+}
+
+.about nav a {
+    margin-right: 10px;
+    margin-top: 20px;
+}
