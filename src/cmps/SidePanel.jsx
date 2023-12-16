@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 /* eslint-disable react/prop-types */
-=======
-import { useState, useEffect, useRef } from "react"
->>>>>>> 08250f0d48a9023f3ea3eea6e8615c4d6c613ca6
 import { SidePanelItem } from '../cmps/SidePanelItem'
 import { Inbox } from 'react-bootstrap-icons';
 import { Star } from 'react-bootstrap-icons';
