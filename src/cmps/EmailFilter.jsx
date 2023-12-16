@@ -35,7 +35,7 @@ export function EmailFilter({ onSetFilter }) {
         <form className="email-filter">
             <div className="label-input">
                 <label htmlFor="search">Search</label>
-                <input onChange={handleChange} id="search" value={search} name="search" type="search" />
+                    <input onChange={handleChange} id="search" value={search} name="search" type="search" />
             </div>
             <div className="label-input-radio-group pretty-border">
                 <div>

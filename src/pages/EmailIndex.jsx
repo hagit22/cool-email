@@ -19,6 +19,10 @@ export function EmailIndex() {
     }, [])
 
     useEffect(() => {
+<<<<<<< HEAD
+=======
+        console.log("EmailIndex: ",filterBy)
+>>>>>>> 08250f0d48a9023f3ea3eea6e8615c4d6c613ca6
         loadEmails()
     }, [filterBy])
 
