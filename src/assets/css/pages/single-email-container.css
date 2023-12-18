@@ -11,6 +11,12 @@
     margin-top: 10px;
 }*/
 
+.single-email-icons {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+
 .single-email-control {
     display: flex;
 }

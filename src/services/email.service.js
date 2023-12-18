@@ -9,7 +9,8 @@ export const emailService = {
     getById,
     createEmailMessage,
     getDefaultFilter,
-    getEmailTypes
+    getEmailTypes,
+    getInitialEditMail
 }
 
 export const emailUtils = {
@@ -19,6 +20,7 @@ export const emailUtils = {
 }
 
 const STORAGE_KEY = 'email_db'
+const EMAIL_ID_LENGTH = 6;
 
 const loggedInUser = {
     email: 'student@coding.com',
@@ -72,17 +74,25 @@ function save(emailMessage) {
     }
 }
 
-function createEmailMessage(subject = '', body = '', to = '') {
-    return {
+function createEmailMessage(from = loggedInUser.email, to = '', subject = '', body = '') {
+    let emailMessage =  {
         subject,
         body,
-        from: loggedInUser.email,
+        from,
         to,
         sentAt: Date.now(),
         removedAt: null,
         wasRead: false,
-        isStarred: false
+        isStarred: false,
+        emailType: emailTypes.SENT
+        // send upon <enter>? 
+        // field validation...
+        // grid with name tags...
+        // send yourself!! 
+        // back arrow from details ==> go to correct folder (should we preserve all filters?)
+        // compose X icon... & also dont send mail if all empty!
     }
+    save(emailMessage);
 }
 
 function getDefaultFilter() {
@@ -96,6 +106,15 @@ function getDefaultFilter() {
 
 function getEmailTypes() {
     return emailTypes;
+}
+
+function getInitialEditMail() {
+    return {
+        from: loggedInUser.email,
+        to: '',
+        subject: '',
+        body: '',
+    }
 }
 
 function emailDateTimeShortDisplay(dateTime) {
@@ -138,9 +157,7 @@ function _generateEmailMessages() {
 }
 
 function _generateMessage(userEmail, bound = emailBound.INBOUND) {
-    const idLength = 6;
-    return {
-        id: utilService.makeId(idLength),
+    let emailMessage = {
         subject: emailUtilService.generateSubject(),
         body: emailUtilService.generateBody(),
         from: bound == emailBound.OUTBOUND ? userEmail : emailUtilService.generateRandomEmailAddress(),
@@ -151,6 +168,7 @@ function _generateMessage(userEmail, bound = emailBound.INBOUND) {
         isStarred: emailUtilService.generateRandomBoolean(),
         emailType: bound == emailBound.INBOUND ? emailTypes.INBOX : emailTypes.SENT
     }
+    save(emailMessage);
 }
 
 

@@ -31,7 +31,7 @@ export function EmailDetails({emailId}) {
     if (!email) return <div>Loading...</div>
     const {sentAt, from, to, subject, body} = email;
     return (  
-      <section className="email-details">
+      <section className="email-details pretty-border">
         <div className="details-subject">
           <h4>{subject}</h4>
         </div>

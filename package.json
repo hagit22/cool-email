@@ -1,7 +1,6 @@
 {
   "name": "react-email-project",
-  "homepage": "https://hagit22.github.io/cool-email",
-  "private": true,
+  "private": false,
   "version": "0.0.0",
   "type": "module",
   "scripts": {

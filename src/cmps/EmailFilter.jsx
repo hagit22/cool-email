@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react"
 
-export function EmailFilter({ onSetFilter }) {
+export function EmailFilter({ filterBy, onSetFilter }) {
 
-    const [currentFilter, setCurrentFilter] = useState({})
+    const [currentFilter, setCurrentFilter] = useState(filterBy)
 
     useEffect(() => {
         onSetFilter(currentFilter);
@@ -35,16 +35,18 @@ export function EmailFilter({ onSetFilter }) {
         <form className="email-filter">
             <div className="label-input">
                 <label htmlFor="search">Search</label>
-                    <input onChange={handleChange} id="search" value={search} name="search" type="search" />
+                <input onChange={handleChange} id="search" value={search} name="search" type="search" />
             </div>
             <div className="label-input-radio-group pretty-border">
                 <div>
                     <label htmlFor="onlyReadMails">Only Read</label>
-                    <input onClick={handleClickRadio} id="onlyReadMails" value={onlyReadMails} name="read-unread-group" type="radio" />
+                    <input onClick={handleClickRadio} id="onlyReadMails" 
+                        value={onlyReadMails} defaultChecked={onlyReadMails} name="read-unread-group" type="radio" />
                 </div>
                 <div>
                     <label htmlFor="onlyUnreadMails">Only Unread</label>
-                    <input onClick={handleClickRadio} id="onlyUnreadMails" value={onlyUnreadMails} name="read-unread-group" type="radio" />
+                    <input onClick={handleClickRadio} id="onlyUnreadMails" 
+                        value={onlyUnreadMails} defaultChecked={onlyUnreadMails} name="read-unread-group" type="radio" />
                 </div>
                 <input onClick={handleResetRadio} type="reset" className="reset-button-style"/>
             </div>

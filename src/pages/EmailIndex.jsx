@@ -37,11 +37,15 @@ export function EmailIndex() {
         <section className="email-index">
             <div>
                 <Link to={`/email/compose`}>
-                    <img className="email-compose image-with-hover" src={imgUrl} alt="Compose" width="45%"/>
+                    <img className="email-compose image-with-hover" src={imgUrl} alt="Compose"title="Compose" width="45%"/>
                 </Link>
             </div>
             <div>
-                <EmailFilter onSetFilter={onSetFilter} />
+                <EmailFilter filterBy=
+                    {{search: filterBy.search, 
+                        onlyReadMails: filterBy.onlyReadMails,
+                    onlyUnreadMails: filterBy.onlyUnreadMails}}
+                    onSetFilter={onSetFilter} />
             </div>
             <div>
                 <SidePanel filterBy={filterBy} onSetFilter={onSetFilter} emailTypes={emailTypes.current}/>
@@ -52,3 +56,4 @@ export function EmailIndex() {
         </section>
     )
 }
+
