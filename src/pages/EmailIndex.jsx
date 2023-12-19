@@ -42,9 +42,9 @@ export function EmailIndex() {
             </div>
             <div>
                 <EmailFilter filterBy=
-                    {{search: filterBy.search, 
-                        onlyReadMails: filterBy.onlyReadMails,
-                    onlyUnreadMails: filterBy.onlyUnreadMails}}
+                            {{search: filterBy.search, 
+                            onlyReadMails: filterBy.onlyReadMails,
+                            onlyUnreadMails: filterBy.onlyUnreadMails}}
                     onSetFilter={onSetFilter} />
             </div>
             <div>

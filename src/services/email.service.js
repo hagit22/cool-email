@@ -157,7 +157,8 @@ function _generateEmailMessages() {
 }
 
 function _generateMessage(userEmail, bound = emailBound.INBOUND) {
-    let emailMessage = {
+    return {
+        id: utilService.makeId(EMAIL_ID_LENGTH),
         subject: emailUtilService.generateSubject(),
         body: emailUtilService.generateBody(),
         from: bound == emailBound.OUTBOUND ? userEmail : emailUtilService.generateRandomEmailAddress(),
@@ -168,7 +169,6 @@ function _generateMessage(userEmail, bound = emailBound.INBOUND) {
         isStarred: emailUtilService.generateRandomBoolean(),
         emailType: bound == emailBound.INBOUND ? emailTypes.INBOX : emailTypes.SENT
     }
-    save(emailMessage);
 }
 
 
