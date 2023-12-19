@@ -1,6 +1,6 @@
 
 export function AboutUs() {
   return (
-    <div>AboutUs</div>
+    <h2>Coming Soon...</h2>
   )
 }

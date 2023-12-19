@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 import { useEffect, useState } from "react"
 import { emailService } from "../services/email.service"
@@ -15,7 +16,6 @@ export function EmailDetails({emailId}) {
 
     async function loadEmail() {
         try {
-          console.log("EmailDetails: emailId = ",emailId)
           const email = await emailService.getById(emailId)
           setEmail(email)
         }

@@ -90,7 +90,8 @@ function createEmailMessage(from = loggedInUser.email, to = '', subject = '', bo
         // grid with name tags...
         // send yourself!! 
         // back arrow from details ==> go to correct folder (should we preserve all filters?)
-        // compose X icon... & also dont send mail if all empty!
+        // compose X icon... & also don't send mail if all empty!
+        // Main screen - responsiveness extent
     }
     save(emailMessage);
 }

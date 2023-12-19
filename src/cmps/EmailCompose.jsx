@@ -4,30 +4,34 @@ import { useState, useEffect, useRef } from 'react';
 export function EmailCompose({editMail, reset, onUpdateEditMail}) {
 
   const [currentEdit, setCurrentEdit] = useState(editMail);
-  const initialEdit = useRef(editMail)
+  const initialEdit = useRef()
 
+  useEffect(() => {
+    initialEdit.current = currentEdit;
+}, [])
+
+  useEffect(() => {
+    onUpdateEditMail(currentEdit);
+}, [currentEdit])
+
+
+useEffect(() => {
   if (reset) {
     setCurrentEdit(initialEdit.current);
   }
-    
-  useEffect(() => {
-    console.log("in use effect: ", currentEdit);
-    if (reset)
-      return;
-    onUpdateEditMail(currentEdit);
-}, [currentEdit])
+}, [reset])
 
 
 function handleChange({target}) {
     let { name: field, value } = target
     setCurrentEdit(prevEdit => ({ ...prevEdit, [field]: value }))
-  }
+}
 
   return (  
     <section className="component pretty-border">
       <form className="email-compose-form"> {/*onSubmit={handleSubmit} >*/} 
         <div className="email-compose-fields">
-          <label htmlFor="from">From:</label>
+          <div>From:</div>
           <div> {currentEdit.from} </div>
           <label htmlFor="to">To:</label>
           <input className="compose-text" onChange={handleChange} id="to" name="to" value={currentEdit.to} type="email" />

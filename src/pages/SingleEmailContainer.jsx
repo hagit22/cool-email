@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router"
 import { emailService } from "../services/email.service"
 import { ArrowLeft } from 'react-bootstrap-icons';
@@ -16,6 +16,12 @@ export function SingleEmailContainer() {
 
     const [editMail, setEditMail] = useState(emailService.getInitialEditMail())
     const [reset, setReset] = useState(false);
+
+    useEffect(() => {
+      if (reset)
+        setReset(false)
+    }, [reset])
+
 
     const onClickArrowBack = () => {
       navigate('/email')   
@@ -38,15 +44,12 @@ export function SingleEmailContainer() {
     const onClickSend = () => {
       !editMail.to ? alert("Please specify at least one recipient") :
         emailService.createEmailMessage(editMail.from, editMail.to, editMail.subject, editMail.body);
+        onClickArrowBack();
     }
 
     const onUpdateEditMail = (newMailEdit) => {   
-      if (reset) {  
-        setReset(false);
-        return;
-      }
       setEditMail(prevEdit => ({ ...prevEdit, ...newMailEdit }))
-  }
+    }
 
   return (  
         <section className="single-email-container pretty-border">
