@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react"
 import { Link } from "react-router-dom";
+import { useParams } from "react-router"
 import { emailService } from '../services/email.service';
 import { EmailList } from "../cmps/EmailList";
 import { EmailFilter } from "../cmps/EmailFilter";
@@ -9,8 +10,9 @@ import { SidePanel } from "../cmps/SidePanel";
 
 export function EmailIndex() {
 
+    const emailBox = useParams().box;
     const [emails, setEmails] = useState(null)
-    const [filterBy, setFilterBy] = useState(emailService.getDefaultFilter())
+    const [filterBy, setFilterBy] = useState(emailService.getDefaultFilter(emailBox))
 
     const emailTypes = useRef();
 
@@ -36,7 +38,7 @@ export function EmailIndex() {
     return (
         <section className="email-index">
             <div>
-                <Link to={`/email/compose`}>
+                <Link to={`/email/single/${filterBy.emailType}`}> 
                     <img className="email-compose image-with-hover" src={imgUrl} alt="Compose"title="Compose" width="45%"/>
                 </Link>
             </div>
@@ -51,7 +53,7 @@ export function EmailIndex() {
                 <SidePanel filterBy={filterBy} onSetFilter={onSetFilter} emailTypes={emailTypes.current}/>
             </div>
             <div>
-                <EmailList emails={emails} />
+                <EmailList emails={emails} emailBox={filterBy.emailType}/>
             </div>
         </section>
     )

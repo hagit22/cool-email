@@ -20,6 +20,9 @@ export function SidePanel({filterBy, onSetFilter, emailTypes}) {
     return (
         <section>
             <div className="side-panel">
+
+            {/* // CHANGE TO LINKTO */}
+
                 <SidePanelItem onClickItem={onClickFilter} Icon={Inbox} text={emailTypes.INBOX} currentId={currentFilter.emailType}/>
                 <SidePanelItem onClickItem={onClickFilter} Icon={Star} text={emailTypes.STARRED} currentId={currentFilter.emailType}/>
                 <SidePanelItem onClickItem={onClickFilter} Icon={Send} text={emailTypes.SENT} currentId={currentFilter.emailType}/>

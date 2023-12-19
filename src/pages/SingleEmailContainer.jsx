@@ -11,7 +11,8 @@ import { EmailCompose } from '../cmps/EmailCompose'
 
 export function SingleEmailContainer() {
   
-    const emailId = useParams().details;
+  const emailBox = useParams().box;
+  const emailId = useParams().details;
     const navigate = useNavigate()
 
     const [editMail, setEditMail] = useState(emailService.getInitialEditMail())
@@ -24,7 +25,7 @@ export function SingleEmailContainer() {
 
 
     const onClickArrowBack = () => {
-      navigate('/email')   
+      navigate(`/email/${emailBox}`)   
     }
 
     const onClickTrash = async() => {
@@ -64,7 +65,9 @@ export function SingleEmailContainer() {
               {emailId ? '' : <SendFill className="icon-style image-with-hover"  onClick={onClickSend}/>}
             </div> 
           </div>
-          {emailId ? <EmailDetails emailId={emailId}/> : <EmailCompose editMail={emailService.getInitialEditMail()} reset={reset} onUpdateEditMail={onUpdateEditMail}/>}
+          {emailId ? 
+            <EmailDetails emailId={emailId}/> : 
+            <EmailCompose editMail={emailService.getInitialEditMail()} reset={reset} onUpdateEditMail={onUpdateEditMail}/>}
         </section>
     )
 }

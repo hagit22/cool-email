@@ -28,8 +28,9 @@ export function App() {
                             <Route path='/about/app' element={<AboutApp />} />
                         </Route>
                         <Route path="/email" element={<EmailIndex/>} />
-                        <Route path="/email/:details" element={<SingleEmailContainer/>} />
-                        <Route path="/email/compose" element={<SingleEmailContainer/>} />
+                        <Route path="/email/:box" element={<EmailIndex/>} />
+                        <Route path="/email/single/:box" element={<SingleEmailContainer/>} />
+                        <Route path="/email/single/:box/:details" element={<SingleEmailContainer/>} />
                     </Routes>
                 </main>
                 <AppFooter />

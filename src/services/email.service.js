@@ -96,12 +96,12 @@ function createEmailMessage(from = loggedInUser.email, to = '', subject = '', bo
     save(emailMessage);
 }
 
-function getDefaultFilter() {
+function getDefaultFilter(emailType = emailTypes.INBOX) {
     return {
         search: '',
         onlyReadMails: false,
         onlyUnreadMails: false,
-        emailType: emailTypes.INBOX
+        emailType: emailType
     }
 }
 
