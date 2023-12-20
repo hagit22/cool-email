@@ -51,7 +51,7 @@ async function query(filterBy) {
         emailMessages = emailMessages.filter (email =>
             ((regexModelTerm.test(email.subject) || regexModelTerm.test(email.body) || regexModelTerm.test(email.from)) 
                 && !(onlyUnreadMails && email.wasRead) && !(onlyReadMails && !email.wasRead)
-                && email.emailType == emailType)
+                && email.emailType.includes(emailType))
         )
     }
     return emailMessages
@@ -75,6 +75,9 @@ function save(emailMessage) {
 }
 
 function createEmailMessage(from = loggedInUser.email, to = '', subject = '', body = '') {
+    let emailType = [emailTypes.SENT]
+    if (to === loggedInUser.email)
+        emailType.push(emailTypes.INBOX)
     let emailMessage =  {
         subject,
         body,
@@ -84,14 +87,14 @@ function createEmailMessage(from = loggedInUser.email, to = '', subject = '', bo
         removedAt: null,
         wasRead: false,
         isStarred: false,
-        emailType: emailTypes.SENT
+        emailType: emailType
+
         // send upon <enter>? 
         // field validation...
-        // grid with name tags...
+        // grid with name tags... for compose message
         // send yourself!! 
-        // back arrow from details ==> go to correct folder (should we preserve all filters?)
-        // compose X icon... & also don't send mail if all empty!
         // Main screen - responsiveness extent
+        // about
     }
     save(emailMessage);
 }
@@ -158,6 +161,7 @@ function _generateEmailMessages() {
 }
 
 function _generateMessage(userEmail, bound = emailBound.INBOUND) {
+    let emailType = (bound == emailBound.INBOUND) ? emailTypes.INBOX : emailTypes.SENT;
     return {
         id: utilService.makeId(EMAIL_ID_LENGTH),
         subject: emailUtilService.generateSubject(),
@@ -168,7 +172,7 @@ function _generateMessage(userEmail, bound = emailBound.INBOUND) {
         removedAt: null,
         wasRead: emailUtilService.generateRandomBoolean(),
         isStarred: emailUtilService.generateRandomBoolean(),
-        emailType: bound == emailBound.INBOUND ? emailTypes.INBOX : emailTypes.SENT
+        emailType: [emailType]
     }
 }
 

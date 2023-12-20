@@ -4,7 +4,7 @@ import { emailUtils } from '../services/email.service';
 
 export function EmailPreview({ email, emailBox }) {
 
-    const {id, from, subject, sentAt, wasRead, e} = email;
+    const {id, from, subject, sentAt, wasRead} = email;
     return (
         <article className={"email-preview pretty-border" + (wasRead ? " email-preview-read" : '')}>
             <Link to={`/email/single/${emailBox}/${id}`}>
