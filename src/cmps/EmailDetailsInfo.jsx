@@ -1,5 +1,6 @@
+/* eslint-disable react/prop-types */
 
-import { emailUtils } from '../services/email.service';
+import { emailUtilService } from '../services/email-utils.service';
 
 export function EmailDetailsInfo({ from, to, sentAt, show }) {
 
@@ -8,7 +9,7 @@ export function EmailDetailsInfo({ from, to, sentAt, show }) {
         <div className="email-details-info pretty-border">
             <div className="details-info-row"><span>From:</span> {from}</div>
             <div className="details-info-row"><span>To:</span> {to}</div>
-            <div className="details-info-row"><span>Sent at:</span> {emailUtils.emailDateTimeLongDisplay(sentAt)}</div>
+            <div className="details-info-row"><span>Sent at:</span> {emailUtilService.emailDateTimeLongDisplay(sentAt)}</div>
         </div>
     )
 }

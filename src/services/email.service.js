@@ -13,12 +13,6 @@ export const emailService = {
     getInitialEditMail
 }
 
-export const emailUtils = {
-    emailDateTimeShortDisplay,
-    emailDateTimeLongDisplay,
-
-}
-
 const STORAGE_KEY = 'email_db'
 const EMAIL_ID_LENGTH = 6;
 
@@ -46,12 +40,12 @@ _generateEmailMessages()
 async function query(filterBy) {
     let emailMessages = await storageService.query(STORAGE_KEY)
     if (filterBy) {
-        let {search = '', onlyReadMails, onlyUnreadMails, emailType} = filterBy
+        let { search = '', onlyReadMails, onlyUnreadMails, emailType } = filterBy
         const regexModelTerm = new RegExp(search, 'i')
-        emailMessages = emailMessages.filter (email =>
-            ((regexModelTerm.test(email.subject) || regexModelTerm.test(email.body) || regexModelTerm.test(email.from)) 
-                && !(onlyUnreadMails && email.wasRead) && !(onlyReadMails && !email.wasRead)
-                && email.emailType.includes(emailType))
+        emailMessages = emailMessages.filter(email =>
+        ((regexModelTerm.test(email.subject) || regexModelTerm.test(email.body) || regexModelTerm.test(email.from))
+            && !(onlyUnreadMails && email.wasRead) && !(onlyReadMails && !email.wasRead)
+            && email.emailType.includes(emailType))
         )
     }
     return emailMessages
@@ -78,7 +72,7 @@ function createEmailMessage(from = loggedInUser.email, to = '', subject = '', bo
     let emailType = [emailTypes.SENT]
     if (to === loggedInUser.email)
         emailType.push(emailTypes.INBOX)
-    let emailMessage =  {
+    let emailMessage = {
         subject,
         body,
         from,
@@ -88,13 +82,6 @@ function createEmailMessage(from = loggedInUser.email, to = '', subject = '', bo
         wasRead: false,
         isStarred: false,
         emailType: emailType
-
-        // send upon <enter>? 
-        // field validation...
-        // grid with name tags... for compose message
-        // send yourself!! 
-        // Main screen - responsiveness extent
-        // about
     }
     save(emailMessage);
 }
@@ -121,41 +108,14 @@ function getInitialEditMail() {
     }
 }
 
-function emailDateTimeShortDisplay(dateTime) {
-    let dateTimeDisplay = new Date(dateTime);
-    return dateTimeDisplay.toDateString() == new Date().toDateString() ? 
-        dateTimeDisplay.toLocaleTimeString(undefined, {
-            second: '2-digit',
-            minute: '2-digit',
-            hour: '2-digit'
-          }) : 
-        dateTimeDisplay.toLocaleDateString('en-US', {
-            month: '2-digit',
-            day: '2-digit',
-            year: 'numeric'
-          })
-}  
-   
-function emailDateTimeLongDisplay(dateTime) {
-    let dateTimeDisplay = new Date(dateTime);
-    return dateTimeDisplay.toLocaleString('en-US', {
-        month: '2-digit',
-        day: '2-digit',
-        year: 'numeric',
-        second: '2-digit',
-        minute: '2-digit',
-        hour: '2-digit',
-      })
-}  
-   
 function _generateEmailMessages() {
     let emailMessages = utilService.loadFromStorage(STORAGE_KEY)
     if (!emailMessages || !emailMessages.length) {
         emailMessages = [];
-        for (let i = 0; i < 5; i++) 
-            emailMessages.push (_generateMessage(loggedInUser.email, emailBound.INBOUND));
-        for (let i = 0; i < 5; i++) 
-            emailMessages.push (_generateMessage(loggedInUser.email, emailBound.OUTBOUND));
+        for (let i = 0; i < 5; i++)
+            emailMessages.push(_generateMessage(loggedInUser.email, emailBound.INBOUND));
+        for (let i = 0; i < 5; i++)
+            emailMessages.push(_generateMessage(loggedInUser.email, emailBound.OUTBOUND));
         utilService.saveToStorage(STORAGE_KEY, emailMessages)
     }
 }

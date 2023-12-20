@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router"
 import { emailService } from "../services/email.service"
+import { emailUtilService } from "../services/email-utils.service"
 import { ArrowLeft } from 'react-bootstrap-icons';
 import { Trash } from 'react-bootstrap-icons';
 import { XLg } from 'react-bootstrap-icons';
@@ -43,9 +44,21 @@ export function SingleEmailContainer() {
     }
 
     const onClickSend = () => {
-      !editMail.to ? alert("Please specify at least one recipient") :
-        emailService.createEmailMessage(editMail.from, editMail.to, editMail.subject, editMail.body);
-        onClickArrowBack();
+      const { from, to, subject, body } = editMail;
+      const message = !to ? 
+        "Please specify at least one recipient" :
+          !emailUtilService.isValidEmail(to) ? 
+            `The address "${to}" in the "To" field was not recognized. Please make sure that all addresses are properly formed` :
+            '';
+      if (message) {
+        alert(message)
+        return;
+      }
+      if (subject.trim().length == 0 && body.trim().length == 0) 
+        if (!confirm("Send this message without a subject or text in the body?" ))
+          return;
+      emailService.createEmailMessage(from, to, subject, body);
+      onClickArrowBack();
     }
 
     const onUpdateEditMail = (newMailEdit) => {   

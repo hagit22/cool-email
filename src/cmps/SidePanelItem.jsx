@@ -7,9 +7,9 @@ export function SidePanelItem({Icon, text, onClickItem, currentId}) {
         <Link to={`/email/${text}`}>
             <section id={text} onClick={onClickItem} className={`side-panel-item ${text===currentId ? 'panel-item-selected' : ''}`}>
                 <Icon id={text} className="icon-style"/>
-                <a id={text} className="side-panel-filter-name">
+                <div id={text} className="side-panel-filter-name">
                     {text}
-                </a>
+                </div>
             </section>
         </Link>
     );

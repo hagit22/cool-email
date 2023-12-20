@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { emailService } from "../services/email.service"
-import { emailUtils } from '../services/email.service';
+import { emailUtilService } from '../services/email-utils.service';
 import { EmailDetailsInfo } from './EmailDetailsInfo'
 
 export function EmailDetails({emailId}) {
@@ -41,7 +41,7 @@ export function EmailDetails({emailId}) {
             <span className="arrow" onClick={onClickArrowDown}>&#x1F893;</span>
             <EmailDetailsInfo from={from} to={to} sentAt={sentAt} show={extraInfo}/>
           </div>
-          <h5>{emailUtils.emailDateTimeShortDisplay(sentAt)}</h5>
+          <h5>{emailUtilService.emailDateTimeShortDisplay(sentAt)}</h5>
         </div>
         <div className="details-body">
           <div>{body}</div>

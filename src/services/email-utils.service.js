@@ -5,7 +5,10 @@ export const emailUtilService = {
     generateRandomBoolean,
     generateRandomDate,
     generateSubject,
-    generateBody
+    generateBody,
+    emailDateTimeShortDisplay,
+    emailDateTimeLongDisplay,
+    isValidEmail
 }
 
 function generateRandomEmailAddress () {
@@ -43,3 +46,40 @@ function generateSubject() {
 function generateBody() {
     return new LoremIpsum().generateParagraphs(1);
 }
+
+function emailDateTimeShortDisplay(dateTime) {
+    let dateTimeDisplay = new Date(dateTime);
+    return dateTimeDisplay.toDateString() == new Date().toDateString() ?
+        dateTimeDisplay.toLocaleTimeString(undefined, {
+            second: '2-digit',
+            minute: '2-digit',
+            hour: '2-digit'
+        }) :
+        dateTimeDisplay.toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric'
+        })
+}
+
+function emailDateTimeLongDisplay(dateTime) {
+    let dateTimeDisplay = new Date(dateTime);
+    return dateTimeDisplay.toLocaleString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric',
+        second: '2-digit',
+        minute: '2-digit',
+        hour: '2-digit',
+    })
+}
+
+function isValidEmail(email) {
+    const splitAt = email.split('@');
+    let result = splitAt.length <= 1 ? false :
+        (splitAt.length >= 2) && (splitAt[1].split('.').length >= 2) ? true : false;
+    return result;
+}
+
+
+

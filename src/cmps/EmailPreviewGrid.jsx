@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { emailUtils } from '../services/email.service';
+import { emailUtilService } from '../services/email-utils.service';
 
 export function EmailPreviewGrid({ email }) {
 
@@ -11,7 +11,7 @@ export function EmailPreviewGrid({ email }) {
                     <div>{from}</div>
                     <div>{subject.substring(0, 80) + ((subject.length >= 80) ? '...' : '')}</div>
                     <div className="email-preview-grid-date">
-                        {emailUtils.emailDateTimeShortDisplay(sentAt)}
+                        {emailUtilService.emailDateTimeShortDisplay(sentAt)}
                     </div>
                 </div>
             </Link>

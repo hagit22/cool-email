@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Link } from "react-router-dom";
-import { emailUtils } from '../services/email.service';
+import { emailUtilService } from '../services/email-utils.service';
 
 export function EmailPreview({ email, emailBox }) {
 
@@ -14,7 +14,7 @@ export function EmailPreview({ email, emailBox }) {
                         <div className="email-preview-subject">{subject.substring(0, 55) + ((subject.length >= 55) ? '...' : '')}</div>
                     </div>
                     <div className="email-preview-date">
-                        {emailUtils.emailDateTimeShortDisplay(sentAt)}
+                        {emailUtilService.emailDateTimeShortDisplay(sentAt)}
                     </div>
                 </div>
             </Link>
