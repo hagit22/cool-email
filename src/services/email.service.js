@@ -80,7 +80,7 @@ function createEmailMessage(from = loggedInUser.email, to = '', subject = '', bo
         sentAt: Date.now(),
         removedAt: null,
         wasRead: false,
-        isStarred: false,
+        //isStarred: false,
         emailType: emailType
     }
     save(emailMessage);
@@ -121,7 +121,9 @@ function _generateEmailMessages() {
 }
 
 function _generateMessage(userEmail, bound = emailBound.INBOUND) {
-    let emailType = (bound == emailBound.INBOUND) ? emailTypes.INBOX : emailTypes.SENT;
+    let emailType = [(bound == emailBound.INBOUND) ? emailTypes.INBOX : emailTypes.SENT];
+    if (emailUtilService.generateRandomBoolean())
+        emailType.push(emailTypes.STARRED);
     return {
         id: utilService.makeId(EMAIL_ID_LENGTH),
         subject: emailUtilService.generateSubject(),
@@ -131,8 +133,9 @@ function _generateMessage(userEmail, bound = emailBound.INBOUND) {
         sentAt: emailUtilService.generateRandomDate(),
         removedAt: null,
         wasRead: emailUtilService.generateRandomBoolean(),
-        isStarred: emailUtilService.generateRandomBoolean(),
-        emailType: [emailType]
+        //isStarred: emailUtilService.generateRandomBoolean(),
+        emailType: emailType
+    
     }
 }
 

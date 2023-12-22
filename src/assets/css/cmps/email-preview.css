@@ -14,6 +14,16 @@
     word-break: break-all;
 }
 
+.email-preview-start {
+    display: flex;
+    justify-content: left;
+    align-items:end;
+}
+
+.fill-star {
+    color: #F7CB4D;
+}
+
 .email-preview-from {
     min-width: 200px;
     /* justify-self: flex-start; */

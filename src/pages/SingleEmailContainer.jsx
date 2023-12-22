@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router"
+import { useOutletContext } from 'react-router-dom'
 import { emailService } from "../services/email.service"
 import { emailUtilService } from "../services/email-utils.service"
 import { ArrowLeft } from 'react-bootstrap-icons';
@@ -12,8 +13,8 @@ import { EmailCompose } from '../cmps/EmailCompose'
 
 export function SingleEmailContainer() {
   
-  const emailBox = useParams().box;
-  const emailId = useParams().details;
+    const emailBox = useParams().box;
+    const emailId = useParams().details;
     const navigate = useNavigate()
 
     const [editMail, setEditMail] = useState(emailService.getInitialEditMail())

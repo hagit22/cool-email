@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react"
-import { Link } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { useParams } from "react-router"
 import { emailService } from '../services/email.service';
 import { EmailList } from "../cmps/EmailList";
@@ -30,6 +30,10 @@ export function EmailIndex() {
         setEmails(emails)
     }
 
+    const onUpdateEmail = (email) => {  
+        emailService.save(email)
+    }
+
     const onSetFilter = (updatedFilter) => {      
         setFilterBy(prevFilter => ({ ...prevFilter, ...updatedFilter }))
     }
@@ -53,7 +57,10 @@ export function EmailIndex() {
                 <SidePanel filterBy={filterBy} onSetFilter={onSetFilter} emailTypes={emailTypes.current}/>
             </div>
             <div>
-                <EmailList emails={emails} emailBox={filterBy.emailType}/>
+                <EmailList emails={emails} 
+                    emailBox={filterBy.emailType} 
+                    emailTypes={emailTypes.current}
+                    onUpdateEmail={onUpdateEmail}/>
             </div>
         </section>
     )

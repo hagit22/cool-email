@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { SidePanelItem } from '../cmps/SidePanelItem'
+import { SidePanelItem } from './SidePanelItem'
 import { Inbox } from 'react-bootstrap-icons';
 import { Star } from 'react-bootstrap-icons';
 import { Send } from 'react-bootstrap-icons';
