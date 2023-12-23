@@ -33,7 +33,7 @@
     /* justify-self: flex-end; */
 }
 
-.email-preview-read {
+.email-preview-unread {
     font-weight: 700;
     background-color: white;
 }

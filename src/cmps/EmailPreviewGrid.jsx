@@ -6,7 +6,7 @@ export function EmailPreviewGrid({ email }) {
 
     const {id, from, subject, sentAt, wasRead} = email;
     return (
-        <article className={"email-preview pretty-border" + (wasRead ? " email-preview-read" : '')}>
+        <article className={"email-preview pretty-border" + (!wasRead ? " email-preview-unread" : '')}>
             <Link to={`/email/${id}`}>
                 <div className="email-preview-grid-container">
                     <div>{from}</div>

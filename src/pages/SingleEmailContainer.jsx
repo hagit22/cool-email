@@ -5,6 +5,7 @@ import { emailService } from "../services/email.service"
 import { emailUtilService } from "../services/email-utils.service"
 import { ArrowLeft } from 'react-bootstrap-icons';
 import { Trash } from 'react-bootstrap-icons';
+import { Envelope } from 'react-bootstrap-icons';
 import { XLg } from 'react-bootstrap-icons';
 import { SendFill } from 'react-bootstrap-icons';
 import { EmailDetails } from '../cmps/EmailDetails'
@@ -17,8 +18,26 @@ export function SingleEmailContainer() {
     const emailId = useParams().details;
     const navigate = useNavigate()
 
-    const [editMail, setEditMail] = useState(emailService.getInitialEditMail())
+    const [currentEmail, setCurrentEmail] = useState(null)
     const [reset, setReset] = useState(false);
+    const [markAsUnread, setMarkAsUnread] = useState(false);
+
+    useEffect(() => {
+      if(emailId)
+        loadEmail()
+    }, [])
+
+    useEffect(() => {
+      if(emailId && currentEmail) { // details-page and not initial 'empty' render
+        saveWasReadOrNot(true)  // Always save as-read, when entering the details view (unless already so)
+      }
+    }, [currentEmail])
+
+    useEffect(() => {
+      if(emailId && currentEmail) { // details-page and not initial 'empty' render
+        saveWasReadOrNot(false)
+      }
+    }, [markAsUnread])
 
     useEffect(() => {
       if (reset)
@@ -26,13 +45,42 @@ export function SingleEmailContainer() {
     }, [reset])
 
 
-    const onClickArrowBack = () => {
-      navigate(`/email/${emailBox}`)   
+    async function loadEmail() {
+      try {
+        const emailLoaded = await emailService.getById(emailId)
+        setCurrentEmail(emailLoaded);
+      }
+      catch (error) {
+          console.log('loadEmail: error:', error)
+      }
     }
 
-    const onClickTrash = async() => {
+    async function saveWasReadOrNot(markWasReadOrNot) {
       try {
-        await emailService.remove(emailId);
+        const hasBeenRead = currentEmail.wasRead;
+        if (markWasReadOrNot === hasBeenRead) // Already what we need to mark
+          return;
+        if (markWasReadOrNot) { // mark as read
+          let updatedEmail = {...currentEmail, wasRead: true}
+          emailService.save(updatedEmail); // No need to wait for save. Staying in details-view
+          return;
+        }
+        let updatedEmail = {...currentEmail, wasRead: false} // mark as unread
+        await emailService.save(updatedEmail); // Wait for save, so the change will be visible when going back to list-view
+        onClickArrowBack();
+      }
+      catch (error) {
+          console.log('saveWasReadOrNot: error:', error)
+      }
+    }
+
+    const onClickArrowBack = () => {
+        navigate(`/email/${emailBox}`)   
+    }
+
+    const onClickTrash = () => {
+      try {
+        emailService.remove(emailId);
         onClickArrowBack();
       }
       catch (error) {
@@ -40,12 +88,16 @@ export function SingleEmailContainer() {
       }
     }
 
+    const onClickMarkUnread = async() => {
+      setMarkAsUnread(true);
+    }
+
     const onClickDiscard = () => {
       setReset(true);
     }
 
     const onClickSend = () => {
-      const { from, to, subject, body } = editMail;
+      const { from, to, subject, body } = currentEmail;
       const message = !to ? 
         "Please specify at least one recipient" :
           !emailUtilService.isValidEmail(to) ? 
@@ -62,8 +114,9 @@ export function SingleEmailContainer() {
       onClickArrowBack();
     }
 
-    const onUpdateEditMail = (newMailEdit) => {   
-      setEditMail(prevEdit => ({ ...prevEdit, ...newMailEdit }))
+    // callback from child
+    const onUpdateEmail = (newEmail) => {   
+      setCurrentEmail(prevEmail => ({ ...prevEmail, ...newEmail }))
     }
 
   return (  
@@ -74,14 +127,15 @@ export function SingleEmailContainer() {
               {emailId ?
                 <Trash className="icon-style image-with-hover"  onClick={onClickTrash}/> :
                 <XLg className="icon-style image-with-hover"  onClick={onClickDiscard}/> }
+              {emailId ? <Envelope className="icon-style image-with-hover"  onClick={onClickMarkUnread}/> : ''}
             </div>
             <div>
               {emailId ? '' : <SendFill className="icon-style image-with-hover"  onClick={onClickSend}/>}
             </div> 
           </div>
           {emailId ? 
-            <EmailDetails emailId={emailId}/> : 
-            <EmailCompose editMail={emailService.getInitialEditMail()} reset={reset} onUpdateEditMail={onUpdateEditMail}/>}
+            <EmailDetails currentEmail={currentEmail}/> :
+            <EmailCompose editEmail={emailService.getInitialEditMail()} reset={reset} onUpdateEmail={onUpdateEmail}/>}
         </section>
     )
 }

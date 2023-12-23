@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from 'react';
 
-export function EmailCompose({editMail, reset, onUpdateEditMail}) {
+export function EmailCompose({editEmail, reset, onUpdateEmail}) {
 
-  const [currentEdit, setCurrentEdit] = useState(editMail);
+  const [currentEdit, setCurrentEdit] = useState(editEmail);
   const initialEdit = useRef()
 
   useEffect(() => {
@@ -11,7 +11,7 @@ export function EmailCompose({editMail, reset, onUpdateEditMail}) {
 }, [])
 
   useEffect(() => {
-    onUpdateEditMail(currentEdit);
+    onUpdateEmail(currentEdit);
 }, [currentEdit])
 
 

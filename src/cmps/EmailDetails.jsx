@@ -1,35 +1,19 @@
 /* eslint-disable react/prop-types */
 
-import { useEffect, useState } from "react"
-import { emailService } from "../services/email.service"
+import { useState } from "react"
 import { emailUtilService } from '../services/email-utils.service';
 import { EmailDetailsInfo } from './EmailDetailsInfo'
 
-export function EmailDetails({emailId}) {
+export function EmailDetails({currentEmail}) {
   
-    const [email, setEmail] = useState(null)
     const [extraInfo, setExtraInfo] = useState(false);
-
-    useEffect(() => {
-        loadEmail()
-    }, [])
-
-    async function loadEmail() {
-        try {
-          const email = await emailService.getById(emailId)
-          setEmail(email)
-        }
-        catch (error) {
-            console.log('error:', error)
-        }
-    }
 
     const onClickArrowDown = () => {
       setExtraInfo( prev => setExtraInfo(!prev) );
     }
 
-    if (!email) return <div>Loading...</div>
-    const {sentAt, from, to, subject, body} = email;
+    if (!currentEmail) return <div>Loading...</div>
+    const {sentAt, from, to, subject, body} = currentEmail;
     return (  
       <section className="email-details pretty-border">
         <div className="details-subject">

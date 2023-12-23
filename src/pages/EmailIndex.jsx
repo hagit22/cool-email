@@ -26,13 +26,23 @@ export function EmailIndex() {
 
 
     const loadEmails = async() => {
-        const emails = await emailService.query(filterBy)
-        setEmails(emails)
+        try {
+            const emails = await emailService.query(filterBy)
+            setEmails(emails)
+        }
+        catch (error) {
+            console.log('loadEmail: error:', error)
+        }
     }
 
     const onUpdateEmail = (email) => {  
-        emailService.save(email)
-    }
+        try {
+            emailService.save(email)
+        }
+        catch (error) {
+            console.log('onUpdateEmail: error:', error)
+        }
+      }
 
     const onSetFilter = (updatedFilter) => {      
         setFilterBy(prevFilter => ({ ...prevFilter, ...updatedFilter }))
