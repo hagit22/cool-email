@@ -10,7 +10,8 @@ export const emailService = {
     createEmailMessage,
     getDefaultFilter,
     getEmailTypes,
-    getInitialEditMail
+    getInitialEditMail,
+    queryUnreadMails
 }
 
 const STORAGE_KEY = 'email_db'
@@ -49,6 +50,17 @@ async function query(filterBy) {
         )
     }
     return emailMessages
+}
+
+async function queryUnreadMails() {
+    let emailMessages = await storageService.query(STORAGE_KEY)
+    let unreadMap = {}
+    Object.values(emailTypes).forEach( value => {
+        unreadMap = {...unreadMap, [value]: emailMessages.filter(email => 
+            email.emailType.includes(value) && email.wasRead == false).length
+        }
+    })
+    return unreadMap;
 }
 
 function getById(id) {

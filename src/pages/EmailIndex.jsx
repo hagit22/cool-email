@@ -12,6 +12,7 @@ export function EmailIndex() {
 
     const emailBox = useParams().box;
     const [emails, setEmails] = useState(null)
+    const [unReadsMap, setUnReadsMap] = useState({})
     const [filterBy, setFilterBy] = useState(emailService.getDefaultFilter(emailBox))
 
     const emailTypes = useRef();
@@ -29,6 +30,8 @@ export function EmailIndex() {
         try {
             const emails = await emailService.query(filterBy)
             setEmails(emails)
+            const unReads = await emailService.queryUnreadMails();
+            setUnReadsMap(unReads)
         }
         catch (error) {
             console.log('loadEmail: error:', error)
@@ -64,7 +67,8 @@ export function EmailIndex() {
                     onSetFilter={onSetFilter} />
             </div>
             <div>
-                <SidePanel filterBy={filterBy} onSetFilter={onSetFilter} emailTypes={emailTypes.current}/>
+                <SidePanel filterBy={filterBy} onSetFilter={onSetFilter} 
+                    emailTypes={emailTypes.current} unReadsMap={unReadsMap}/>
             </div>
             <div>
                 <EmailList emails={emails} 

@@ -8,7 +8,7 @@ export function EmailCompose({editEmail, reset, onUpdateEmail}) {
 
   useEffect(() => {
     initialEdit.current = currentEdit;
-}, [])
+  }, [])
 
   useEffect(() => {
     onUpdateEmail(currentEdit);

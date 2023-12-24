@@ -2,7 +2,8 @@
 export const utilService = {
     makeId,
     saveToStorage,
-    loadFromStorage
+    loadFromStorage,
+    alignTexts
 }
 
 function makeId(length = 5) {
@@ -21,4 +22,9 @@ function saveToStorage(key, value) {
 function loadFromStorage(key, defaultValue = null) {
     var value = localStorage[key] || defaultValue;
     return JSON.parse(value);
+}
+
+function alignTexts (textArray) {
+    const maxLength = Math.max(...(textArray.map(item => item.length)));
+    return textArray.map(item => item.padEnd(maxLength,' '));
 }

@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { utilService } from '../services/util.service'
 import { SidePanelItem } from './SidePanelItem'
 import { Inbox } from 'react-bootstrap-icons';
 import { Star } from 'react-bootstrap-icons';
@@ -7,7 +8,7 @@ import { Pencil } from 'react-bootstrap-icons';
 import { Trash } from 'react-bootstrap-icons';
 
 
-export function SidePanel({filterBy, onSetFilter, emailTypes}) {
+export function SidePanel({filterBy, onSetFilter, emailTypes, unReadsMap}) {
 
     let currentFilter = filterBy;
 
@@ -17,15 +18,23 @@ export function SidePanel({filterBy, onSetFilter, emailTypes}) {
         onSetFilter(currentFilter)
     }
 
+    const panelIcons = [Inbox, Star, Send, Pencil, Trash]
+    const panelTexts = utilService.alignTexts( Object.values(emailTypes))
+
     return (
         <section>
             <div className="side-panel">
-                <SidePanelItem onClickItem={onClickFilter} Icon={Inbox} text={emailTypes.INBOX} currentId={currentFilter.emailType}/>
-                <SidePanelItem onClickItem={onClickFilter} Icon={Star} text={emailTypes.STARRED} currentId={currentFilter.emailType}/>
-                <SidePanelItem onClickItem={onClickFilter} Icon={Send} text={emailTypes.SENT} currentId={currentFilter.emailType}/>
-                <SidePanelItem onClickItem={onClickFilter} Icon={Pencil} text={emailTypes.DRAFTS} currentId={currentFilter.emailType}/>
-                <SidePanelItem onClickItem={onClickFilter} Icon={Trash} text={emailTypes.TRASH} currentId={currentFilter.emailType}/>
+                {
+                    Object.values(emailTypes).map( (type, index) => (
+                        <SidePanelItem key={type} onClickItem={onClickFilter} Icon={panelIcons[index]} folder={type} 
+                            currentId={currentFilter.emailType} numUnReads={unReadsMap[type]} folderDisplayName={panelTexts[index]}/>
+                    ))
+                }
            </div>
         </section>
     )
 }
+
+
+
+

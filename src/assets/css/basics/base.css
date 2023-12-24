@@ -8,6 +8,7 @@ html {
     scroll-behavior: smooth;
     --main-color: darkcyan;
     --secondary-color: lightgreen;
+    --background-color: #e96b9509;
 }
 
 body {
