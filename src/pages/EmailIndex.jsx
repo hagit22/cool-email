@@ -1,11 +1,11 @@
-import { useEffect, useState, useRef } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Link, Outlet } from "react-router-dom";
 import { useParams } from "react-router"
 import { emailService } from '../services/email.service';
 import { EmailList } from "../cmps/EmailList";
 import { EmailFilter } from "../cmps/EmailFilter";
-import imgUrl from '../assets/imgs/compose-image.jpg'
 import { SidePanel } from "../cmps/SidePanel";
+import imgUrl from '../assets/imgs/compose-image.jpg'
 
 
 export function EmailIndex() {
@@ -14,8 +14,10 @@ export function EmailIndex() {
     const [emails, setEmails] = useState(null)
     const [unReadsMap, setUnReadsMap] = useState({})
     const [filterBy, setFilterBy] = useState(emailService.getDefaultFilter(emailBox))
+    const [sortObj, setSortObj] = useState(emailService.getDefaultSort()) 
 
     const emailTypes = useRef();
+    const sortInitialValues = emailService.getInitialSortValues();
 
     useEffect(() => {
         emailTypes.current = emailService.getEmailTypes();
@@ -23,12 +25,12 @@ export function EmailIndex() {
 
     useEffect(() => {
         loadEmails()
-    }, [filterBy])
+    }, [filterBy, sortObj, emails])
 
 
     const loadEmails = async() => {
         try {
-            const emails = await emailService.query(filterBy)
+            const emails = await emailService.query(filterBy, sortObj)
             setEmails(emails)
             const unReads = await emailService.queryUnreadMails();
             setUnReadsMap(unReads)
@@ -40,7 +42,12 @@ export function EmailIndex() {
 
     const onUpdateEmail = (email) => {  
         try {
-            emailService.save(email)
+            setEmails(prevEmails => 
+                prevEmails.some(currentEmail => currentEmail.id === email.id) ?
+                  prevEmails.map(currentEmail => (currentEmail.id === email.id ? email : currentEmail)) :
+                  [...prevEmails, email]
+            );
+            emailService.save(email) // may be asynchronous because we also updated the local copy, for the coming render
         }
         catch (error) {
             console.log('onUpdateEmail: error:', error)
@@ -49,6 +56,10 @@ export function EmailIndex() {
 
     const onSetFilter = (updatedFilter) => {      
         setFilterBy(prevFilter => ({ ...prevFilter, ...updatedFilter }))
+    }
+
+    const onSetSort = (sortObj) => {      
+        setSortObj(sortObj)
     }
 
     if (!emails) return <div>Loading...</div>
@@ -64,7 +75,10 @@ export function EmailIndex() {
                             {{search: filterBy.search, 
                             onlyReadMails: filterBy.onlyReadMails,
                             onlyUnreadMails: filterBy.onlyUnreadMails}}
-                    onSetFilter={onSetFilter} />
+                            onSetFilter={onSetFilter} 
+                            sortObj={sortObj}
+                            onSetSort={onSetSort}
+                            sortInitialValues={sortInitialValues} />
             </div>
             <div>
                 <SidePanel filterBy={filterBy} onSetFilter={onSetFilter} 

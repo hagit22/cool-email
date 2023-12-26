@@ -24,7 +24,7 @@
 
 .side-panel-item-number {
     font-size: small;
-    font-weight: bolder;
+    font-weight:bolder;
     color: var(--main-color);
     gap: 30px;
 }

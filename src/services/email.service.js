@@ -8,8 +8,10 @@ export const emailService = {
     remove,
     getById,
     createEmailMessage,
-    getDefaultFilter,
     getEmailTypes,
+    getDefaultFilter,
+    getDefaultSort,
+    getInitialSortValues,
     getInitialEditMail,
     queryUnreadMails
 }
@@ -38,7 +40,7 @@ const emailTypes = Object.freeze({
 
 _generateEmailMessages()
 
-async function query(filterBy) {
+async function query(filterBy, sortObj) {
     let emailMessages = await storageService.query(STORAGE_KEY)
     if (filterBy) {
         let { search = '', onlyReadMails, onlyUnreadMails, emailType } = filterBy
@@ -48,6 +50,11 @@ async function query(filterBy) {
             && !(onlyUnreadMails && email.wasRead) && !(onlyReadMails && !email.wasRead)
             && email.emailType.includes(emailType))
         )
+    }
+    if (sortObj) {
+        const sortDir = sortObj.isAscending ? 1 : -1
+        const sortKey = sortObj.sortBy;
+        emailMessages = emailMessages.sort((a,b) => (a[sortKey] > b[sortKey] ? 1 : -1) * sortDir);
     }
     return emailMessages
 }
@@ -98,6 +105,10 @@ function createEmailMessage(from = loggedInUser.email, to = '', subject = '', bo
     save(emailMessage);
 }
 
+function getEmailTypes() {
+    return emailTypes;
+}
+
 function getDefaultFilter(emailType = emailTypes.INBOX) {
     return {
         search: '',
@@ -107,8 +118,18 @@ function getDefaultFilter(emailType = emailTypes.INBOX) {
     }
 }
 
-function getEmailTypes() {
-    return emailTypes;
+function getDefaultSort() {
+    return {
+        sortBy: 'sentAt',
+        isAscending: false
+    }
+}
+
+function getInitialSortValues() {
+    return {
+        date: {key: 'sentAt', isAscending: false},
+        subject: {key: 'subject', isAscending: false}
+    }
 }
 
 function getInitialEditMail() {

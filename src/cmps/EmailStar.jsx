@@ -1,17 +1,21 @@
 /* eslint-disable react/prop-types */
+import { useState, useEffect } from "react"
 import { Star } from 'react-bootstrap-icons';
 import { StarFill } from 'react-bootstrap-icons';
 
 export function EmailStar({ emailType: initialEmailType, emailTypes, onUpdateEmailType }) {
 
-    const updatedEmailType = initialEmailType;
+    const [updatedEmailType, setUpdatedEmailType] = useState(initialEmailType);
     
-    const onToggleIcon = () => {
-        if (updatedEmailType.includes(emailTypes.STARRED)) 
-            updatedEmailType.splice(updatedEmailType.indexOf(emailTypes.STARRED), 1)
-        else
-            updatedEmailType.push(emailTypes.STARRED);
+    useEffect(() => {
         onUpdateEmailType(updatedEmailType)
+    }, [updatedEmailType]); 
+
+
+    const onToggleIcon = () => {
+        setUpdatedEmailType(prevType => prevType.includes(emailTypes.STARRED) ?
+            prevType.filter(type => type!= emailTypes.STARRED) :
+            [...prevType, emailTypes.STARRED])
     } 
 
     return (
