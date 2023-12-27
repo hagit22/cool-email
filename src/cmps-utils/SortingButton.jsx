@@ -18,7 +18,7 @@ export function SortingButton({caption, sortInitialValues, onSort}) {
     };
 
   return (
-    <button onClick={toggleSorting}>
+    <button className="filter-button-style sort-button" onClick={toggleSorting}>
       {isAscending ? '▴' : '▾'}{caption}
     </button>
   )

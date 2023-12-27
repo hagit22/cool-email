@@ -145,9 +145,9 @@ function _generateEmailMessages() {
     let emailMessages = utilService.loadFromStorage(STORAGE_KEY)
     if (!emailMessages || !emailMessages.length) {
         emailMessages = [];
-        for (let i = 0; i < 5; i++)
+        for (let i = 0; i < 10; i++)
             emailMessages.push(_generateMessage(loggedInUser.email, emailBound.INBOUND));
-        for (let i = 0; i < 5; i++)
+        for (let i = 0; i < 10; i++)
             emailMessages.push(_generateMessage(loggedInUser.email, emailBound.OUTBOUND));
         utilService.saveToStorage(STORAGE_KEY, emailMessages)
     }

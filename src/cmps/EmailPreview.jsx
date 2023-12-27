@@ -23,7 +23,8 @@ export function EmailPreview({ email: initialEmail, emailBox, emailTypes, onUpda
             <div className="email-preview-content">
                 <div className="email-preview-main">
                     <div className="email-preview-start">
-                        <EmailStar emailType={emailType} emailTypes={emailTypes} onUpdateEmailType={onUpdateEmailType}/>
+                        {!emailType.includes(emailTypes.TRASH) ?
+                            <EmailStar emailType={emailType} emailTypes={emailTypes} onUpdateEmailType={onUpdateEmailType}/> : ''}
                         <Link to={`/email/single/${emailBox}/${id}`}>
                             <div className="email-preview-from">{from}</div>
                         </Link>

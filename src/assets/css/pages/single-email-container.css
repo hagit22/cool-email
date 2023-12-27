@@ -71,6 +71,12 @@
     font-size: larger;
 }
 
+.delete-forever {
+    margin-right: 40px;
+    margin-left: 20px;
+    align-self:flex-end;
+}
+
 
 
 

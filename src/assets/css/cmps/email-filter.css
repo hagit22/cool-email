@@ -1,8 +1,10 @@
 .email-filter {
     display: flex;
-    flex-wrap: wrap;
+    /*flex-wrap: wrap;*/
     margin-block: 20px;
-    gap: 40px;  
+    gap: 40px;
+    margin: 0px 30px;
+    padding-left: 30px;
 }
 
 .email-filter > section {
@@ -15,7 +17,7 @@
     gap: 5px;
 }
 
-.label-input-radio-group {
+.label-input-group {
     display: flex;
     gap: 15px;
     /*padding: 1px 1px 0px 3px;*/
@@ -25,10 +27,15 @@
     /*opacity: 75%;*/
 }
 
-.reset-button-style {
+.filter-button-style {
     /* background-color:whitesmoke; */
     background-color: white /* #FEFAFB */;
-    border: 0.3px solid lightgray;
+    border: 0.3px solid gray;
     margin-bottom: 3px;
 }
+
+.sort-button {
+    border: lightgray 0px;
+}
+
 

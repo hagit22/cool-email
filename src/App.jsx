@@ -1,5 +1,6 @@
 
 import { Route, HashRouter as Router, Routes } from 'react-router-dom';
+import { emailService } from './services/email.service';
 
 // Pages
 import { Home } from './pages/Home'
@@ -30,7 +31,8 @@ export function App() {
                         {/*<Route path="/email" element={<EmailIndex/>} />*/}
                         <Route path="/email/:box?" element={<EmailIndex/>} />
                             {/*<Route path="/email/single/:box" element={<SingleEmailContainer/>} />*/}
-                            <Route path="/email/single/:box/:details?" element={<SingleEmailContainer/>} />
+                            <Route path="/email/single/:box/:details?" 
+                                element={<SingleEmailContainer emailTypes={emailService.getEmailTypes()}/>} />
                     </Routes>
                 </main>
                 <AppFooter />

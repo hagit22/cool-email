@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState, useEffect } from "react"
 import { useNavigate, useParams } from "react-router"
 import { useOutletContext } from 'react-router-dom'
@@ -12,7 +13,7 @@ import { EmailDetails } from '../cmps/EmailDetails'
 import { EmailCompose } from '../cmps/EmailCompose'
 
 
-export function SingleEmailContainer() {
+export function SingleEmailContainer({emailTypes}) {
   
     const emailBox = useParams().box;
     const emailId = useParams().details;
@@ -21,6 +22,7 @@ export function SingleEmailContainer() {
     const [currentEmail, setCurrentEmail] = useState(null)
     const [reset, setReset] = useState(false);
     const [markAsUnread, setMarkAsUnread] = useState(false);
+    const [wasRemoved, setWasRemoved] = useState(false);
 
     useEffect(() => {
       if(emailId)
@@ -38,6 +40,10 @@ export function SingleEmailContainer() {
         saveWasReadOrNot(false)
       }
     }, [markAsUnread])
+
+    /*useEffect(() => {
+      onClickArrowBack();
+    }, [wasRemoved])*/
 
     useEffect(() => {
       if (reset)
@@ -66,6 +72,9 @@ export function SingleEmailContainer() {
           return;
         }
         let updatedEmail = {...currentEmail, wasRead: false} // mark as unread
+
+        // MAYBE THIS SHOULD GO TO USE EFFECT TOO? 
+        // It occurs already in use-effect, but it may be a problem that user waits and it takes a 'long' time
         await emailService.save(updatedEmail); // Wait for save, so the change will be visible when going back to list-view
         onClickArrowBack();
       }
@@ -78,9 +87,19 @@ export function SingleEmailContainer() {
         navigate(`/email/${emailBox}`)   
     }
 
-    const onClickTrash = () => {
+    const onClickTrash = async() => {
       try {
-        emailService.remove(emailId);
+        if (currentEmail.emailType.includes(emailTypes.TRASH))
+          await emailService.remove(emailId);
+        else {
+          let updatedEmail = {
+            ...currentEmail, 
+              emailType: [emailTypes.TRASH],
+              removedAt: Date.now()
+          }
+          await emailService.save(updatedEmail); // Should we await?
+        }
+        //setWasRemoved(true)
         onClickArrowBack();
       }
       catch (error) {
@@ -124,8 +143,10 @@ export function SingleEmailContainer() {
           <div className="single-email-icons">
             <div className="single-email-control">
               <ArrowLeft className="icon-style image-with-hover" onClick={onClickArrowBack}/>
-              {emailId ?
-                <Trash className="icon-style image-with-hover"  onClick={onClickTrash}/> :
+              {emailId ? 
+                (currentEmail && currentEmail.emailType.includes(emailTypes.TRASH) ?
+                  <button onClick={onClickTrash} className="simple-button image-with-hover delete-forever">Delete forever</button> :
+                  <Trash onClick={onClickTrash} className="icon-style image-with-hover"/>) :
                 <XLg className="icon-style image-with-hover"  onClick={onClickDiscard}/> }
               {emailId ? <Envelope className="icon-style image-with-hover"  onClick={onClickMarkUnread}/> : ''}
             </div>
