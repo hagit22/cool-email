@@ -30,6 +30,7 @@ const emailBound = Object.freeze({
     OUTBOUND: "outbound",
 });
 
+// Enum
 const emailTypes = Object.freeze({
     INBOX: "Inbox",
     STARRED: "Starred",

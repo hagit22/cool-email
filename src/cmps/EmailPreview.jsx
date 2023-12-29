@@ -3,13 +3,16 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { emailUtilService } from '../services/email-utils.service';
 import { EmailStar } from "./EmailStar";
+import { Trash } from 'react-bootstrap-icons';
+
 
 export function EmailPreview({ email: initialEmail, emailBox, emailTypes, onUpdateEmail }) {
     
     const [updatedEmail, setUpdatedEmail] = useState(initialEmail)
 
     useEffect(() => {
-        onUpdateEmail(updatedEmail)
+        if (updatedEmail !== initialEmail ) // not the first time
+            onUpdateEmail(updatedEmail)
     }, [updatedEmail]); 
 
 
@@ -24,7 +27,8 @@ export function EmailPreview({ email: initialEmail, emailBox, emailTypes, onUpda
                 <div className="email-preview-main">
                     <div className="email-preview-start">
                         {!emailType.includes(emailTypes.TRASH) ?
-                            <EmailStar emailType={emailType} emailTypes={emailTypes} onUpdateEmailType={onUpdateEmailType}/> : ''}
+                            <EmailStar emailType={emailType} emailTypes={emailTypes} onUpdateEmailType={onUpdateEmailType}/> :
+                            <Trash className="icon-style"></Trash>}
                         <Link to={`/email/single/${emailBox}/${id}`}>
                             <div className="email-preview-from">{from}</div>
                         </Link>

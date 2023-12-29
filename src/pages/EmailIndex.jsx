@@ -17,10 +17,11 @@ export function EmailIndex() {
     const [sortObj, setSortObj] = useState(emailService.getDefaultSort()) 
 
     const emailTypes = useRef();
-    const sortInitialValues = emailService.getInitialSortValues();
+    const sortInitialValues = useRef();
 
     useEffect(() => {
         emailTypes.current = emailService.getEmailTypes();
+        sortInitialValues.current = emailService.getInitialSortValues();
     }, [])
 
     useEffect(() => {
@@ -40,19 +41,19 @@ export function EmailIndex() {
         }
     }
 
-    const onUpdateEmail = (email) => {  
+    const onUpdateEmail = (updatedEmail) => {  
         try {
-            setEmails(prevEmails => 
-                prevEmails.some(currentEmail => currentEmail.id === email.id) ?
-                  prevEmails.map(currentEmail => (currentEmail.id === email.id ? email : currentEmail)) :
-                  [...prevEmails, email]
+            setEmails(existingEmails => 
+                existingEmails.some(currentEmail => currentEmail.id === updatedEmail.id) ?
+                    existingEmails.map(currentEmail => (currentEmail.id === updatedEmail.id ? updatedEmail : currentEmail)) :
+                    [...existingEmails, updatedEmail]
             );
-            emailService.save(email) // may be asynchronous because we also updated the local copy, for the coming render
+            emailService.save(updatedEmail) // may be asynchronous because we also updated the local copy, for the coming render
         }
         catch (error) {
             console.log('onUpdateEmail: error:', error)
         }
-      }
+    }
 
     const onSetFilter = (updatedFilter) => {      
         setFilterBy(prevFilter => ({ ...prevFilter, ...updatedFilter }))
@@ -78,7 +79,7 @@ export function EmailIndex() {
                             onSetFilter={onSetFilter} 
                             sortObj={sortObj}
                             onSetSort={onSetSort}
-                            sortInitialValues={sortInitialValues} />
+                            sortInitialValues={sortInitialValues.current} />
             </div>
             <div>
                 <SidePanel filterBy={filterBy} onSetFilter={onSetFilter} 

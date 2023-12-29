@@ -1,9 +1,10 @@
 /* eslint-disable react/prop-types */
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useNavigate, useParams } from "react-router"
 import { useOutletContext } from 'react-router-dom'
 import { emailService } from "../services/email.service"
 import { emailUtilService } from "../services/email-utils.service"
+import { messageService } from "../services/message.service"
 import { ArrowLeft } from 'react-bootstrap-icons';
 import { Trash } from 'react-bootstrap-icons';
 import { Envelope } from 'react-bootstrap-icons';
@@ -13,7 +14,7 @@ import { EmailDetails } from '../cmps/EmailDetails'
 import { EmailCompose } from '../cmps/EmailCompose'
 
 
-export function SingleEmailContainer({emailTypes}) {
+export function SingleEmailContainer() {
   
     const emailBox = useParams().box;
     const emailId = useParams().details;
@@ -21,25 +22,28 @@ export function SingleEmailContainer({emailTypes}) {
 
     const [currentEmail, setCurrentEmail] = useState(null)
     const [reset, setReset] = useState(false);
-    const [markAsUnread, setMarkAsUnread] = useState(false);
-    const [wasRemoved, setWasRemoved] = useState(false);
+    //const [markAsUnread, setMarkAsUnread] = useState(false);
+    //const [wasRemoved, setWasRemoved] = useState(false);
+
+    const emailTypes = useRef();
 
     useEffect(() => {
       if(emailId)
         loadEmail()
+      emailTypes.current = emailService.getEmailTypes();
     }, [])
 
     useEffect(() => {
       if(emailId && currentEmail) { // details-page and not initial 'empty' render
-        saveWasReadOrNot(true)  // Always save as-read, when entering the details view (unless already so)
+        saveAsRead()  // Always mark as read, when entering the details view 
       }
     }, [currentEmail])
 
-    useEffect(() => {
+    /*useEffect(() => {
       if(emailId && currentEmail) { // details-page and not initial 'empty' render
-        saveWasReadOrNot(false)
+        saveAsUnread()
       }
-    }, [markAsUnread])
+    }, [markAsUnread])*/
 
     /*useEffect(() => {
       onClickArrowBack();
@@ -61,25 +65,23 @@ export function SingleEmailContainer({emailTypes}) {
       }
     }
 
-    async function saveWasReadOrNot(markWasReadOrNot) {
-      try {
-        const hasBeenRead = currentEmail.wasRead;
-        if (markWasReadOrNot === hasBeenRead) // Already what we need to mark
-          return;
-        if (markWasReadOrNot) { // mark as read
-          let updatedEmail = {...currentEmail, wasRead: true}
-          emailService.save(updatedEmail); // No need to wait for save. Staying in details-view
-          return;
-        }
-        let updatedEmail = {...currentEmail, wasRead: false} // mark as unread
+    async function saveAsRead() {
+      if (currentEmail.wasRead) // already marked as read
+        return
+      let updatedEmail = {...currentEmail, wasRead: true}
+      emailService.save(updatedEmail); // No need to wait for save. Staying in details-view
+      return;
+    }
 
-        // MAYBE THIS SHOULD GO TO USE EFFECT TOO? 
-        // It occurs already in use-effect, but it may be a problem that user waits and it takes a 'long' time
+    async function saveAsUnread() {
+      try {
+        let updatedEmail = {...currentEmail, wasRead: false} 
         await emailService.save(updatedEmail); // Wait for save, so the change will be visible when going back to list-view
+        messageService.toastMessage("Conversation marked as unread.")
         onClickArrowBack();
       }
       catch (error) {
-          console.log('saveWasReadOrNot: error:', error)
+          console.log('saveAsUnread: error:', error)
       }
     }
 
@@ -87,28 +89,22 @@ export function SingleEmailContainer({emailTypes}) {
         navigate(`/email/${emailBox}`)   
     }
 
-    const onClickTrash = async() => {
-      try {
-        if (currentEmail.emailType.includes(emailTypes.TRASH))
-          await emailService.remove(emailId);
-        else {
-          let updatedEmail = {
-            ...currentEmail, 
-              emailType: [emailTypes.TRASH],
-              removedAt: Date.now()
-          }
-          await emailService.save(updatedEmail); // Should we await?
-        }
-        //setWasRemoved(true)
-        onClickArrowBack();
+    const onClickTrash = () => {
+      if (currentEmail.emailType.includes(emailTypes.current.TRASH)) {
+        emailService.remove(emailId);
+        messageService.toastMessage("Conversation deleted forever.")
       }
-      catch (error) {
-        console.log("onClickTrash: error=",error)
+      else {
+        let updatedEmail = {...currentEmail, emailType: [emailTypes.current.TRASH], removedAt: Date.now()}
+        emailService.save(updatedEmail); 
+        messageService.toastMessage("Conversation moved to Trash.")
       }
+      onClickArrowBack();
     }
 
     const onClickMarkUnread = async() => {
-      setMarkAsUnread(true);
+      saveAsUnread();
+      //setMarkAsUnread(true);
     }
 
     const onClickDiscard = () => {
@@ -144,7 +140,7 @@ export function SingleEmailContainer({emailTypes}) {
             <div className="single-email-control">
               <ArrowLeft className="icon-style image-with-hover" onClick={onClickArrowBack}/>
               {emailId ? 
-                (currentEmail && currentEmail.emailType.includes(emailTypes.TRASH) ?
+                (currentEmail && currentEmail.emailType.includes(emailTypes.current.TRASH) ?
                   <button onClick={onClickTrash} className="simple-button image-with-hover delete-forever">Delete forever</button> :
                   <Trash onClick={onClickTrash} className="icon-style image-with-hover"/>) :
                 <XLg className="icon-style image-with-hover"  onClick={onClickDiscard}/> }

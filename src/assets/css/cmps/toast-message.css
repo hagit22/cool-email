@@ -1,0 +1,24 @@
+.toast-message {
+    background-color: black;
+    opacity: 90%;
+    color: white;
+    padding: 0.8em 1.2em;
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    font-weight: 350;
+    border-radius: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.toast-message button {
+    float: right;
+    /*margin: 1em;*/
+    width: fit-content;
+    background-color: black;
+    color: white;
+    border: 0;
+}

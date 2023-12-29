@@ -11,6 +11,7 @@ import { SingleEmailContainer } from './pages/SingleEmailContainer';
 // Components
 import { AppHeader } from './cmps/AppHeader'
 import { AppFooter } from './cmps/AppFooter'
+import { Toast } from './cmps/Toast'
 import { AboutComp } from './cmps/AboutComp';
 import { AboutApp } from './cmps/AboutApp';
 
@@ -28,13 +29,12 @@ export function App() {
                             <Route path='/about/company' element={<AboutComp />} />
                             <Route path='/about/app' element={<AboutApp />} />
                         </Route>
-                        {/*<Route path="/email" element={<EmailIndex/>} />*/}
                         <Route path="/email/:box?" element={<EmailIndex/>} />
-                            {/*<Route path="/email/single/:box" element={<SingleEmailContainer/>} />*/}
-                            <Route path="/email/single/:box/:details?" 
-                                element={<SingleEmailContainer emailTypes={emailService.getEmailTypes()}/>} />
+                            <Route path="/email/single/:box/:details?"  element={<SingleEmailContainer 
+                                                                        emailTypes={emailService.getEmailTypes()}/>} />
                     </Routes>
                 </main>
+                <Toast/>
                 <AppFooter />
             </section>
         </Router>
