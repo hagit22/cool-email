@@ -55,7 +55,7 @@ async function query(filterBy, sortObj) {
     if (sortObj) {
         const sortDir = sortObj.isAscending ? 1 : -1
         const sortKey = sortObj.sortBy;
-        emailMessages = emailMessages.sort((a,b) => (a[sortKey] > b[sortKey] ? 1 : -1) * sortDir);
+        emailMessages = emailMessages.sort((a,b) => (a[sortKey].toLowerCase() > b[sortKey].toLowerCase() ? 1 : -1) * sortDir);
     }
     return emailMessages
 }
@@ -97,7 +97,7 @@ function createEmailMessage(from = loggedInUser.email, to = '', subject = '', bo
         body,
         from,
         to,
-        sentAt: Date.now(),
+        sentAt: new Date(Date.now()).toISOString(),
         removedAt: null,
         wasRead: false,
         //isStarred: false,
@@ -146,9 +146,9 @@ function _generateEmailMessages() {
     let emailMessages = utilService.loadFromStorage(STORAGE_KEY)
     if (!emailMessages || !emailMessages.length) {
         emailMessages = [];
-        for (let i = 0; i < 10; i++)
+        for (let i = 0; i < 5; i++)
             emailMessages.push(_generateMessage(loggedInUser.email, emailBound.INBOUND));
-        for (let i = 0; i < 10; i++)
+        for (let i = 0; i < 5; i++)
             emailMessages.push(_generateMessage(loggedInUser.email, emailBound.OUTBOUND));
         utilService.saveToStorage(STORAGE_KEY, emailMessages)
     }

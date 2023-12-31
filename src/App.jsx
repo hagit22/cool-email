@@ -1,12 +1,10 @@
 
 import { Route, HashRouter as Router, Routes } from 'react-router-dom';
-import { emailService } from './services/email.service';
 
 // Pages
 import { Home } from './pages/Home'
 import { AboutUs } from './pages/AboutUs';
 import { EmailIndex } from './pages/EmailIndex';
-import { SingleEmailContainer } from './pages/SingleEmailContainer';
 
 // Components
 import { AppHeader } from './cmps/AppHeader'
@@ -24,18 +22,17 @@ export function App() {
                 <AppHeader />
                 <main className='container'>
                     <Routes>
-                        <Route path="/" element={<Home />} />
-                        <Route path="/about" element={<AboutUs />}>
-                            <Route path='/about/company' element={<AboutComp />} />
-                            <Route path='/about/app' element={<AboutApp />} />
+                        <Route path="/" element={<Home/>} />
+                        <Route path="/about" element={<AboutUs/>}>
+                            <Route path='/about/company' element={<AboutComp/>} />
+                            <Route path='/about/app' element={<AboutApp/>} />
                         </Route>
                         <Route path="/email/:box?" element={<EmailIndex/>} />
-                            <Route path="/email/single/:box/:details?"  element={<SingleEmailContainer 
-                                                                        emailTypes={emailService.getEmailTypes()}/>} />
+                        <Route path="/email/:box/:details" element={<EmailIndex/>} />
                     </Routes>
                 </main>
                 <Toast/>
-                <AppFooter />
+                <AppFooter/>
             </section>
         </Router>
 

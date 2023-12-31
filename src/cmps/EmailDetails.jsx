@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import { emailUtilService } from '../services/email-utils.service';
-import { EmailDetailsInfo } from './EmailDetailsInfo'
+import { EmailDetailsExtra } from './EmailDetailsExtra'
 
 export function EmailDetails({currentEmail}) {
   
@@ -23,7 +23,7 @@ export function EmailDetails({currentEmail}) {
           <div className="details-from">
             <h5> {from} </h5>
             <span className="arrow" onClick={onClickArrowDown}>&#x1F893;</span>
-            <EmailDetailsInfo from={from} to={to} sentAt={sentAt} show={extraInfo}/>
+            <EmailDetailsExtra from={from} to={to} sentAt={sentAt} show={extraInfo}/>
           </div>
           <h5>{emailUtilService.emailDateTimeShortDisplay(sentAt)}</h5>
         </div>

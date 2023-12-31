@@ -34,8 +34,12 @@
 }
 
 .email-preview-unread {
-    font-weight: 700;
+    font-weight: bold;
     background-color: white;
+}
+
+.email-preview-unread span { /* Maybe for 'to' section in Sent folder? */
+    font-weight: normal;
 }
 
 /*.email-preview .info {

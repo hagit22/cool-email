@@ -20,7 +20,7 @@ export function EmailPreview({ email: initialEmail, emailBox, emailTypes, onUpda
         setUpdatedEmail(prevEmail => ({...prevEmail, emailType}));
     }
 
-    const {id, from, subject, sentAt, wasRead, emailType} = updatedEmail;
+    const {id, from, to, subject, sentAt, wasRead, emailType} = updatedEmail;
     return (
         <article className={"email-preview1 pretty-border" + (!wasRead ? " email-preview-unread" : '')}>
             <div className="email-preview-content">
@@ -29,15 +29,17 @@ export function EmailPreview({ email: initialEmail, emailBox, emailTypes, onUpda
                         {!emailType.includes(emailTypes.TRASH) ?
                             <EmailStar emailType={emailType} emailTypes={emailTypes} onUpdateEmailType={onUpdateEmailType}/> :
                             <Trash className="icon-style"></Trash>}
-                        <Link to={`/email/single/${emailBox}/${id}`}>
-                            <div className="email-preview-from">{from}</div>
+                        <Link to={`/email/${emailBox}/${id}`}>
+                            {(emailBox === emailTypes.SENT) ?
+                                <div className="email-preview-from">To: {to}</div> :
+                                <div className="email-preview-from">{from}</div>}
                         </Link>
                     </div>
-                    <Link to={`/email/single/${emailBox}/${id}`}>
+                    <Link to={`/email/${emailBox}/${id}`}>
                         <div className="email-preview-subject">{subject.substring(0, 50) + ((subject.length >= 50) ? '...' : '')}</div>
                     </Link>
                 </div>
-                <Link to={`/email/single/${emailBox}/${id}`}>
+                <Link to={`/email/${emailBox}/${id}`}>
                     <div className="email-preview-date"> {emailUtilService.emailDateTimeShortDisplay(sentAt)}</div>
                 </Link>
             </div>

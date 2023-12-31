@@ -1,4 +1,4 @@
-.single-email-container {
+.details-container {
     display: flex;
     flex-direction: column;
     align-items: left;
@@ -11,13 +11,13 @@
     margin-top: 10px;
 }*/
 
-.single-email-icons {
+.details-icons {
     display: flex;
     justify-content: space-between;
     padding-bottom: 10px;
 }
 
-.single-email-control {
+.details-control {
     display: flex;
 }
 

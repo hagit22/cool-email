@@ -6,17 +6,17 @@
 
 /* Pages */
 @import "./pages/about.css";
-@import "./pages/single-email-container.css";
+@import "./pages/email-details.css";
 @import "./pages/email-index.css";
 @import "./pages/home.css";
 
 /* Components */
 @import "./cmps/app-header.css";
 @import "./cmps/email-compose.css";
+@import "./cmps/email-compose-modal.css";
 @import "./cmps/email-filter.css";
 @import "./cmps/email-list.css";
 @import "./cmps/email-preview.css";
-@import "./cmps/email-preview-grid.css";
 @import "./cmps/side-panel.css";
 @import "./cmps/toast-message.css";
 

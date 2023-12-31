@@ -2,7 +2,7 @@
 
 import { emailUtilService } from '../services/email-utils.service';
 
-export function EmailDetailsInfo({ from, to, sentAt, show }) {
+export function EmailDetailsExtra({ from, to, sentAt, show }) {
 
     if (!show) return "";
     return (
