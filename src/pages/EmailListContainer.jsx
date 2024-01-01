@@ -7,7 +7,7 @@ import { EmailList } from "../cmps/EmailList";
 import { EmailFilter } from "../cmps/EmailFilter";
 import { SidePanel } from "../cmps/SidePanel";
 import { EmailComposeModal } from "../cmps/EmailComposeModal";
-import imgUrl from '../assets/imgs/compose-image.jpg'
+import { Pencil } from 'react-bootstrap-icons';
 
 
 export function EmailListContainer({emailBox, emailTypes, onEmailSave}) {
@@ -37,22 +37,17 @@ export function EmailListContainer({emailBox, emailTypes, onEmailSave}) {
             setUnReadsMap(unReads)
         }
         catch (error) {
-            console.log('loadEmail: error:', error)
+            console.log('loadEmails: error:', error)
         }
     }
 
     const onUpdateEmail = (updatedEmail) => {  
-        try {
-            setEmails(existingEmails => 
-                existingEmails.some(currentEmail => currentEmail.id === updatedEmail.id) ?
-                    existingEmails.map(currentEmail => (currentEmail.id === updatedEmail.id ? updatedEmail : currentEmail)) :
-                    [...existingEmails, updatedEmail]
-            );
-            onEmailSave(updatedEmail) // may be asynchronous because we also updated the local copy, for the coming render
-        }
-        catch (error) {
-            console.log('onUpdateEmail: error:', error)
-        }
+        setEmails(existingEmails => 
+            existingEmails.some(currentEmail => currentEmail.id === updatedEmail.id) ?
+                existingEmails.map(currentEmail => (currentEmail.id === updatedEmail.id ? updatedEmail : currentEmail)) :
+                [...existingEmails, updatedEmail]
+        );
+        onEmailSave(updatedEmail) // Its ok if asynchronous, because we also updated the local copy, for the coming render
     }
 
     const onSendEmail = (email) => {    
@@ -79,12 +74,11 @@ export function EmailListContainer({emailBox, emailTypes, onEmailSave}) {
     if (!emails) return <div>Loading...</div>
     return (
         <section className="email-index">
-            <div>
-                <img className="email-compose image-with-hover" src={imgUrl} alt="Compose"title="Compose" width="45%"
-                    onClick={onShowComposeModal}/>
-                {!showComposeModal ? '' :
-                    <EmailComposeModal initialEdit={emailService.getInitialEditMail()} onSendEmail={onSendEmail}/>}
+            <div className="email-compose" onClick={onShowComposeModal} >
+                <Pencil className="image-with-hover"/> Compose
             </div>
+            {!showComposeModal ? '' :
+                    <EmailComposeModal initialEdit={emailService.getInitialEditMail()} onSendEmail={onSendEmail}/>}
             <div>
                 <EmailFilter filterBy=
                             {{search: filterBy.search, 
@@ -100,9 +94,7 @@ export function EmailListContainer({emailBox, emailTypes, onEmailSave}) {
                     emailTypes={emailTypes} unReadsMap={unReadsMap}/>
             </div>
             <div>
-                <EmailList emails={emails} 
-                    emailBox={filterBy.emailType} 
-                    emailTypes={emailTypes}
+                <EmailList emails={emails} emailBox={filterBy.emailType} emailTypes={emailTypes}
                     onUpdateEmail={onUpdateEmail}/>
             </div>
         </section>

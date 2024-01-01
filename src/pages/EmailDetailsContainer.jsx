@@ -4,10 +4,10 @@ import { useNavigate } from "react-router"
 import { useOutletContext } from 'react-router-dom'
 import { emailService } from "../services/email.service"
 import { messageService } from "../services/message.service"
+import { EmailDetails } from '../cmps/EmailDetails'
 import { ArrowLeft } from 'react-bootstrap-icons';
 import { Trash } from 'react-bootstrap-icons';
 import { Envelope } from 'react-bootstrap-icons';
-import { EmailDetails } from '../cmps/EmailDetails'
 
 
 export function EmailDetailsContainer({emailId, emailBox, emailTypes, onEmailSave}) {
@@ -17,14 +17,12 @@ export function EmailDetailsContainer({emailId, emailBox, emailTypes, onEmailSav
     const [currentEmail, setCurrentEmail] = useState(null)
 
     useEffect(() => {
-      if(emailId)
-        loadEmail()
+      loadEmail()
     }, [])
 
     useEffect(() => {
-      if(emailId && currentEmail) { // details-page and not initial 'empty' render
+    if(currentEmail)  // Not initial 'empty' render
         saveAsRead()  // Always mark as read, when entering the details view 
-      }
     }, [currentEmail])
 
 
@@ -43,7 +41,6 @@ export function EmailDetailsContainer({emailId, emailBox, emailTypes, onEmailSav
         return
       let updatedEmail = {...currentEmail, wasRead: true}
       onEmailSave(updatedEmail); // No need to wait for save. Staying in details-view
-      return;
     }
 
     async function saveAsUnread() {
@@ -58,26 +55,31 @@ export function EmailDetailsContainer({emailId, emailBox, emailTypes, onEmailSav
       }
     }
 
-    const onClickArrowBack = () => {
-        navigate(`/email/${emailBox}`)   
-    }
-
-    const onClickTrash = () => {
-      if (currentEmail.emailType.includes(emailTypes.TRASH)) {
-        emailService.remove(emailId);
-        messageService.toastMessage("Conversation deleted forever.")
+    const onClickTrash = async () => {
+      try {
+        if (currentEmail.emailType.includes(emailTypes.TRASH)) {
+          await emailService.remove(emailId);
+          messageService.toastMessage("Conversation deleted forever.")
+        }
+        else {
+          let updatedEmail = {...currentEmail, emailType: [emailTypes.TRASH], removedAt: Date.now()}
+          await onEmailSave(updatedEmail); 
+          messageService.toastMessage("Conversation moved to Trash.")
+        }
+        onClickArrowBack();
       }
-      else {
-        let updatedEmail = {...currentEmail, emailType: [emailTypes.TRASH], removedAt: Date.now()}
-        onEmailSave(updatedEmail); 
-        messageService.toastMessage("Conversation moved to Trash.")
-      }
-      onClickArrowBack();
+      catch (error) {
+        console.log('onClickTrash: error:', error)
     }
+  }
 
-    const onClickMarkUnread = async() => {
+  const onClickMarkUnread = () => {
       saveAsUnread();
     }
+
+    const onClickArrowBack = () => {
+      navigate(`/email/${emailBox}`) /* This is like initial routing with original defaults (e.g. sort, filter) */
+  }
 
   return (  
         <section className="details-container pretty-border">

@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
-import { XLg } from 'react-bootstrap-icons';
 import { EmailComposeForm } from "./EmailComposeForm"
+import { XLg } from 'react-bootstrap-icons';
 
 
 export function EmailComposeModal({initialEdit, onSendEmail}) {

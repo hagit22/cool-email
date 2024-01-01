@@ -12,13 +12,23 @@ export function EmailIndex() {
 
     const emailTypes = useRef(emailService.getEmailTypes());
 
-    function onEmailSave(email) {
-        emailService.save(email)
+
+    async function onEmailSave(email) {
+        try {
+            await emailService.save(email)
+        }
+        catch (error) {
+            console.log('onEmailSave: error:', error)
+        }
     }
 
-
-    if (!emailId)
-        return <EmailListContainer emailBox={emailBox} emailTypes={emailTypes.current} onEmailSave={onEmailSave}/>
-    return <EmailDetailsContainer emailId={emailId} emailBox={emailBox} emailTypes={emailTypes.current} onEmailSave={onEmailSave}/>
+    return(
+        <div>
+            {(emailId) ? 
+                <EmailDetailsContainer emailId={emailId} 
+                    emailBox={emailBox} emailTypes={emailTypes.current} onEmailSave={onEmailSave}/> :
+                <EmailListContainer emailBox={emailBox} emailTypes={emailTypes.current} onEmailSave={onEmailSave}/>}
+        </div>
+    )
 }
 

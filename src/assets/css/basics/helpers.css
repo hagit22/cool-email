@@ -181,7 +181,7 @@
 }
 
 .pretty-border {
-    background: #e96b9509;
+    background: var(--background-color);
     background-repeat: no-repeat;
     box-shadow: 0 0 11px #0000002b;
     padding: 15px;

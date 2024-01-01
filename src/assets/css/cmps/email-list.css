@@ -4,6 +4,9 @@
     padding: 0;
     gap: 15px;
     list-style-type: none;
+    scroll-behavior: smooth;
+    overflow-y: auto;
+    height: 90%;
 }
 
 .email-list .email-actions {

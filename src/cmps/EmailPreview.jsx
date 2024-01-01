@@ -22,7 +22,7 @@ export function EmailPreview({ email: initialEmail, emailBox, emailTypes, onUpda
 
     const {id, from, to, subject, sentAt, wasRead, emailType} = updatedEmail;
     return (
-        <article className={"email-preview1 pretty-border" + (!wasRead ? " email-preview-unread" : '')}>
+        <article className={"email-preview pretty-border" + (!wasRead ? " email-preview-unread" : '')}>
             <div className="email-preview-content">
                 <div className="email-preview-main">
                     <div className="email-preview-start">
