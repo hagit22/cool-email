@@ -103,7 +103,7 @@ function createEmailMessage(from = loggedInUser.email, to = '', subject = '', bo
         //isStarred: false,
         emailType: emailType
     }
-    save(emailMessage);
+    return save(emailMessage);
 }
 
 function getEmailTypes() {

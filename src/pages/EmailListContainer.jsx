@@ -17,17 +17,23 @@ export function EmailListContainer({emailBox, emailTypes, onEmailSave}) {
     const [filterBy, setFilterBy] = useState(emailService.getDefaultFilter(emailBox))
     const [sortObj, setSortObj] = useState(emailService.getDefaultSort()) 
     const [showComposeModal, setShowComposeModal] = useState(false)
+    const [emailsUpdated, setEmailsUpdated] = useState(false)
 
     const sortInitialValues = useRef();
 
     useEffect(() => {
         sortInitialValues.current = emailService.getInitialSortValues();
     }, [])
-
+    
+    useEffect(() => {
+        if (emailsUpdated)
+            setEmailsUpdated(false)
+    }, [emailsUpdated])    
+    
     useEffect(() => {
         loadEmails()
-    }, [filterBy, sortObj, emails])
-
+    }, [filterBy, sortObj, emailsUpdated])    
+    
 
     const loadEmails = async() => {
         try {
@@ -41,19 +47,27 @@ export function EmailListContainer({emailBox, emailTypes, onEmailSave}) {
         }
     }
 
-    const onUpdateEmail = (updatedEmail) => {  
-        setEmails(existingEmails => 
+    const onUpdateEmail = async (updatedEmail) => {  
+
+        // commented out because we need to refilter in order to add/remove mail from 'starred' folder
+        /*setEmails(existingEmails => 
             existingEmails.some(currentEmail => currentEmail.id === updatedEmail.id) ?
                 existingEmails.map(currentEmail => (currentEmail.id === updatedEmail.id ? updatedEmail : currentEmail)) :
                 [...existingEmails, updatedEmail]
-        );
-        onEmailSave(updatedEmail) // Its ok if asynchronous, because we also updated the local copy, for the coming render
+        );*/  
+        await onEmailSave(updatedEmail) 
+        //if (filterBy.emailType.includes(emailTypes.STARRED)) // commented out because we want to display num-un-reads in panel
+            setEmailsUpdated(true)
     }
 
-    const onSendEmail = (email) => {    
+    const onSendEmail = async(email) => {    
         if (email) {    // null email means user closed modal explicitly
             const { from, to, subject, body } = email;   
-            emailService.createEmailMessage(from, to, subject, body);
+            /*const newEmailMessage = */
+            await emailService.createEmailMessage(from, to, subject, body);
+            //if (filterBy.emailType.includes(emailTypes.SENT)) // commented out to support sending email to myself
+                //setEmails(existingEmails => [...existingEmails, newEmailMessage]) // commented out because we need to resort
+                setEmailsUpdated(true) 
             messageService.toastMessage("Message sent")
         }
         setShowComposeModal(false)

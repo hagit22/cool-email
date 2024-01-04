@@ -15,7 +15,7 @@ function createEventEmitter() {
         },
         // Use this function to emit an event
         emit(eventId, data) {
-            console.log(listenersMap)
+            //console.log(listenersMap)
             if (!listenersMap[eventId]) return
             listenersMap[eventId].forEach(listenerFunction => listenerFunction(eventId, data))
         }
