@@ -9,9 +9,10 @@
 
 .email-preview-main {
     display: flex;
-    gap:40px;
+    gap: 40px;
     margin-right: 40px;
     word-break: break-all;
+    cursor: pointer;
 }
 
 .email-preview-start {
@@ -27,6 +28,10 @@
 .email-preview-from {
     min-width: 200px;
     /* justify-self: flex-start; */
+}
+
+.email-preview-from span {
+    color: #DF4B39;
 }
 
 .email-preview-subject {

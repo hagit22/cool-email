@@ -82,17 +82,17 @@ export function EmailDetailsContainer({emailId, emailBox, emailTypes, onEmailSav
   }
 
   return (  
-        <section className="details-container pretty-border">
-          <div className="details-icons">
-            <div className="details-control">
-              <ArrowLeft className="icon-style image-with-hover" onClick={onClickArrowBack}/>
-              {currentEmail && currentEmail.emailType.includes(emailTypes.TRASH) ?
-                <button onClick={onClickTrash} className="simple-button image-with-hover delete-forever">Delete forever</button> :
-                <Trash onClick={onClickTrash} className="icon-style image-with-hover"/>}
-              <Envelope className="icon-style image-with-hover"  onClick={onClickMarkUnread}/> 
-            </div>
-          </div>
-          <EmailDetails currentEmail={currentEmail}/> 
-        </section>
-    )
+    <section className="details-container pretty-border">
+      <div className="details-icons">
+        <div className="details-control">
+          <ArrowLeft className="icon-style image-with-hover" onClick={onClickArrowBack}/>
+          {currentEmail && currentEmail.emailType.includes(emailTypes.TRASH) ?
+            <button onClick={onClickTrash} className="simple-button image-with-hover delete-forever">Delete forever</button> :
+            <Trash onClick={onClickTrash} className="icon-style image-with-hover"/>}
+          <Envelope className="icon-style image-with-hover"  onClick={onClickMarkUnread}/> 
+        </div>
+      </div>
+      <EmailDetails currentEmail={currentEmail}/> 
+    </section>
+  )
 }

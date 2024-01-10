@@ -3,17 +3,24 @@ import { utilService } from './util.service.js'
 import { emailUtilService } from './email-utils.service.js'
 
 export const emailService = {
+
+    // CRUDL
     query,
+    queryNumUnReads,
     save,
     remove,
     getById,
-    createEmailMessage,
+    createNewEmailMessage,
+
+    // Email Message Handling
+    sendEmailMessage,
+    draftEmailMessage,
+
+    // Initializers
     getEmailTypes,
     getDefaultFilter,
     getDefaultSort,
-    getInitialSortValues,
-    getInitialEditMail,
-    queryUnreadMails
+    getInitialSortValues
 }
 
 const STORAGE_KEY = 'email_db'
@@ -43,24 +50,32 @@ _generateEmailMessages()
 
 async function query(filterBy, sortObj) {
     let emailMessages = await storageService.query(STORAGE_KEY)
+
     if (filterBy) {
         let { search = '', onlyReadMails, onlyUnreadMails, emailType } = filterBy
         const regexModelTerm = new RegExp(search, 'i')
         emailMessages = emailMessages.filter(email =>
         ((regexModelTerm.test(email.subject) || regexModelTerm.test(email.body) || regexModelTerm.test(email.from))
             && !(onlyUnreadMails && email.wasRead) && !(onlyReadMails && !email.wasRead)
-            && email.emailType.includes(emailType))
+            && email.emailType.includes(emailType)
+            && (email.to || email.subject || email.body))
         )
     }
+
+    if (filterBy && filterBy.emailType.includes(emailTypes.DRAFTS) && 
+        sortObj && sortObj.sortBy == 'sentAt') 
+            sortObj.sortBy = 'createdAt'
+
     if (sortObj) {
         const sortDir = sortObj.isAscending ? 1 : -1
         const sortKey = sortObj.sortBy;
-        emailMessages = emailMessages.sort((a,b) => (a[sortKey].toLowerCase() > b[sortKey].toLowerCase() ? 1 : -1) * sortDir);
+        emailMessages = emailMessages.sort((a,b) => 
+            (utilService.toLowerCaseTolerant(a[sortKey]) > utilService.toLowerCaseTolerant(b[sortKey]) ? 1 : -1) * sortDir);
     }
     return emailMessages
 }
 
-async function queryUnreadMails() {
+async function queryNumUnReads() {
     let emailMessages = await storageService.query(STORAGE_KEY)
     let unreadMap = {}
     Object.values(emailTypes).forEach( value => {
@@ -83,26 +98,38 @@ function save(emailMessage) {
     if (emailMessage.id) {
         return storageService.put(STORAGE_KEY, emailMessage)
     } else {
-        emailMessage.isOn = false
         return storageService.post(STORAGE_KEY, emailMessage)
     }
 }
 
-function createEmailMessage(from = loggedInUser.email, to = '', subject = '', body = '') {
-    let emailType = [emailTypes.SENT]
-    if (to === loggedInUser.email)
-        emailType.push(emailTypes.INBOX)
-    let emailMessage = {
-        subject,
-        body,
-        from,
-        to,
-        sentAt: new Date(Date.now()).toISOString(),
+function createNewEmailMessage() {
+    const emailMessage = {
+        from: loggedInUser.email,
+        to: '',
+        subject: '',
+        body: '',
+        createdAt: new Date(Date.now()).toISOString(),
+        sentAt: null,
         removedAt: null,
         wasRead: false,
-        //isStarred: false,
-        emailType: emailType
+        emailType: []
     }
+    return save(emailMessage)
+}
+
+function sendEmailMessage(emailMessage) {
+    let emailType = [emailTypes.SENT]
+    if (emailMessage.to === loggedInUser.email)
+        emailType.push(emailTypes.INBOX)
+    emailMessage.emailType = emailType
+    emailMessage.sentAt = new Date(Date.now()).toISOString()
+    return save(emailMessage);
+}
+
+function draftEmailMessage(emailMessage) {
+    emailMessage.emailType = [emailTypes.DRAFTS]
+    emailMessage.sentAt = new Date(Date.now()).toISOString()
+    emailMessage.wasRead = true // gmail marks drafts as 'read' by default
     return save(emailMessage);
 }
 
@@ -133,14 +160,6 @@ function getInitialSortValues() {
     }
 }
 
-function getInitialEditMail() {
-    return {
-        from: loggedInUser.email,
-        to: '',
-        subject: '',
-        body: '',
-    }
-}
 
 function _generateEmailMessages() {
     let emailMessages = utilService.loadFromStorage(STORAGE_KEY)
@@ -158,18 +177,18 @@ function _generateMessage(userEmail, bound = emailBound.INBOUND) {
     let emailType = [(bound == emailBound.INBOUND) ? emailTypes.INBOX : emailTypes.SENT];
     if (emailUtilService.generateRandomBoolean())
         emailType.push(emailTypes.STARRED);
+    const randDate = emailUtilService.generateRandomDate()
     return {
         id: utilService.makeId(EMAIL_ID_LENGTH),
         subject: emailUtilService.generateSubject(),
         body: emailUtilService.generateBody(),
         from: bound == emailBound.OUTBOUND ? userEmail : emailUtilService.generateRandomEmailAddress(),
         to: bound == emailBound.INBOUND ? userEmail : emailUtilService.generateRandomEmailAddress(),
-        sentAt: emailUtilService.generateRandomDate(),
+        createdAt: randDate,
+        sentAt: randDate,
         removedAt: null,
         wasRead: emailUtilService.generateRandomBoolean(),
-        //isStarred: emailUtilService.generateRandomBoolean(),
         emailType: emailType
-    
     }
 }
 

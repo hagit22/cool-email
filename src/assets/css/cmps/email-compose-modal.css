@@ -25,6 +25,11 @@
     font-size: medium;
   }
 
+  .close-modal {
+    padding: 0px 3px;
+    cursor: pointer;
+  }
+
   .compose-submit-button {
     background-color: #0B57D0;
     color: white;
@@ -33,5 +38,12 @@
     width: fit-content;
     opacity: 75%;
   }
+
+  .compose-discard {
+    align-self: center;
+    justify-self: right;
+}
+
+
   
   

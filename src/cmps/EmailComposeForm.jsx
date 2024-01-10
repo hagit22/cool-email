@@ -1,17 +1,42 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { Trash } from 'react-bootstrap-icons';
 
-export function EmailComposeForm({initialEdit, onSendEmail}) {
+export function EmailComposeForm({emailMessage, onSendEmail, onSaveDraft, onDiscardDraft}) {
 
-  const [currentEdit, setCurrentEdit] = useState(initialEdit);
+  const [currentEdit, setCurrentEdit] = useState(emailMessage);
+  
+  // useRef for current-edit, so it may be reference in async-saveDraft, otherwise closure would use just the initial current-edit
+  const currentEditRef = useRef(currentEdit) 
+
+  useEffect(() => {
+    const intervalId = setInterval(saveDraft, 5000)
+    return(() => window.clearInterval(intervalId))
+  }, [])
+
+  useEffect(() => {
+    currentEditRef.current = currentEdit
+  }, [currentEdit])
 
 
-  function handleChange({target}) {
-      let { name: field, value } = target
-      setCurrentEdit(prevEdit => ({ ...prevEdit, [field]: value }))
+  function saveDraft() {
+    const { to, subject, body } = currentEditRef.current;
+    if (to || subject || body) {
+      //console.log("updating: ",currentEditRef.current.subject)
+      onSaveDraft(currentEditRef.current)
+    }
+  }
+  
+  function onClickTrash() {
+      onDiscardDraft(currentEdit)
   }
 
-  function handleSubmit(event) {
+  function handleChange({target}) {
+    let { name: field, value } = target
+    setCurrentEdit(prevEdit => ({ ...prevEdit, [field]: value }))
+}
+
+function handleSubmit(event) {
     event.preventDefault()
     const { to, subject, body } = currentEdit;
     const message = !to ? "Please specify at least one recipient" : ''
@@ -38,6 +63,7 @@ return (
           <label htmlFor="body">Body:</label>
           <textarea className="compose-text" onChange={handleChange} id="body" name="body" value={currentEdit.body} />
           <input type="submit" value="Send" className='compose-submit-button'/>
+          <Trash size={18} className='compose-discard' onClick={onClickTrash}/>
         </div>
       </form>
     </section>
